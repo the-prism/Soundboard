@@ -45,6 +45,12 @@ namespace Prism.Soundboard
 
             DirectoryInfo fileDirectory = new DirectoryInfo("Files");
             this.filesAndPath = new Dictionary<string, string>();
+            
+            if (!fileDirectory.Exists)
+            {
+                Directory.CreateDirectory("Files");
+                Process.Start("explorer.exe", fileDirectory.FullName);
+            }
 
             foreach (FileInfo file in fileDirectory.GetFiles())
             {
