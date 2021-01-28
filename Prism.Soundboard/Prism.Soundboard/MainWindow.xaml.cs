@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,9 @@ namespace Prism.Soundboard
         private WaveOutEvent outputDevice;
         private AudioFileReader audioFile;
         private Dictionary<string, int> outputDeviceIndexes;
+        private Dictionary<string, string> filesAndPath;
         private int selectedOutputDeviceIndex;
+        private string selectedFilePath;
 
         public MainWindow()
         {
@@ -39,6 +42,15 @@ namespace Prism.Soundboard
                 OutputDeviceSelector.Items.Add(caps.ProductName);
                 this.outputDeviceIndexes.Add(caps.ProductName, n);
             }
+
+            DirectoryInfo fileDirectory = new DirectoryInfo("Files");
+            this.filesAndPath = new Dictionary<string, string>();
+
+            foreach (FileInfo file in fileDirectory.GetFiles())
+            {
+                this.filesAndPath.Add(file.Name, file.FullName);
+                AudioFiles.Items.Add(file.Name);
+            }
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
@@ -50,7 +62,7 @@ namespace Prism.Soundboard
             }
             if (audioFile == null)
             {
-                audioFile = new AudioFileReader(@"M:\Session 6.mp3");
+                audioFile = new AudioFileReader(this.selectedFilePath);
                 outputDevice.Init(audioFile);
             }
             outputDevice.Play();
@@ -72,6 +84,11 @@ namespace Prism.Soundboard
         private void OutputDeviceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.selectedOutputDeviceIndex = this.outputDeviceIndexes?[OutputDeviceSelector.SelectedItem.ToString()] ?? -1;
+        }
+
+        private void AudioFiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.selectedFilePath = this.filesAndPath?[AudioFiles.SelectedItem.ToString()];
         }
     }
 }

@@ -10,6 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="32"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -28,6 +29,11 @@
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
             <Button x:Name="Play" Content="Play" Click="Play_Click" Height="24" Margin="5"/>
             <Button x:Name="Stop" Content="Stop" Click="Stop_Click" Height="24" Margin="5"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,0,0,0">
+            <ListBox x:Name="AudioFiles" SelectionChanged="AudioFiles_SelectionChanged">
+            </ListBox>
         </StackPanel>
     </Grid>
 </Window>
