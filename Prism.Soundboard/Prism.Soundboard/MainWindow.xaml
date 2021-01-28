@@ -18,9 +18,16 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+            <Label Content="Output device :"/>
+            <ComboBox x:Name="OutputDeviceSelector" SelectionChanged="OutputDeviceSelector_SelectionChanged" Height="24">
+                <ComboBoxItem IsSelected="True">Select device</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-            <Button x:Name="Play" Content="Play" Click="Play_Click"/>
-            <Button x:Name="Stop" Content="Stop" Click="Stop_Click"/>
+            <Button x:Name="Play" Content="Play" Click="Play_Click" Height="24" Margin="5"/>
+            <Button x:Name="Stop" Content="Stop" Click="Stop_Click" Height="24" Margin="5"/>
         </StackPanel>
     </Grid>
 </Window>

@@ -1,6 +1,7 @@
 ﻿using NAudio.Wave;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,17 +24,28 @@ namespace Prism.Soundboard
     {
         private WaveOutEvent outputDevice;
         private AudioFileReader audioFile;
+        private Dictionary<string, int> outputDeviceIndexes;
+        private int selectedOutputDeviceIndex;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            this.outputDeviceIndexes = new Dictionary<string, int>();
+
+            for (int n = -1; n < WaveOut.DeviceCount; n++)
+            {
+                var caps = WaveOut.GetCapabilities(n);
+                OutputDeviceSelector.Items.Add(caps.ProductName);
+                this.outputDeviceIndexes.Add(caps.ProductName, n);
+            }
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
         {
             if (outputDevice == null)
             {
-                outputDevice = new WaveOutEvent();
+                outputDevice = new WaveOutEvent() { DeviceNumber = this.selectedOutputDeviceIndex };
                 outputDevice.PlaybackStopped += OnPlaybackStopped;
             }
             if (audioFile == null)
@@ -55,6 +67,11 @@ namespace Prism.Soundboard
             outputDevice = null;
             audioFile.Dispose();
             audioFile = null;
+        }
+
+        private void OutputDeviceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.selectedOutputDeviceIndex = this.outputDeviceIndexes?[OutputDeviceSelector.SelectedItem.ToString()] ?? -1;
         }
     }
 }
