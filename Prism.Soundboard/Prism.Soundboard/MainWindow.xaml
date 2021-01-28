@@ -31,9 +31,8 @@
             <Button x:Name="Stop" Content="Stop" Click="Stop_Click" Height="24" Margin="5"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,0,0,0">
-            <ListBox x:Name="AudioFiles" SelectionChanged="AudioFiles_SelectionChanged">
-            </ListBox>
-        </StackPanel>
+        <ListBox x:Name="AudioFiles" SelectionChanged="AudioFiles_SelectionChanged"
+                 Grid.Row="2" Grid.Column="1">
+        </ListBox>
     </Grid>
 </Window>
