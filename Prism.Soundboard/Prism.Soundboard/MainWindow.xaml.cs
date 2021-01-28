@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,40 @@ namespace Prism.Soundboard
     /// </summary>
     public partial class MainWindow : Window
     {
+        private WaveOutEvent outputDevice;
+        private AudioFileReader audioFile;
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Play_Click(object sender, RoutedEventArgs e)
+        {
+            if (outputDevice == null)
+            {
+                outputDevice = new WaveOutEvent();
+                outputDevice.PlaybackStopped += OnPlaybackStopped;
+            }
+            if (audioFile == null)
+            {
+                audioFile = new AudioFileReader(@"M:\Session 6.mp3");
+                outputDevice.Init(audioFile);
+            }
+            outputDevice.Play();
+        }
+
+        private void Stop_Click(object sender, RoutedEventArgs e)
+        {
+            outputDevice?.Stop();
+        }
+
+        private void OnPlaybackStopped(object sender, StoppedEventArgs args)
+        {
+            outputDevice.Dispose();
+            outputDevice = null;
+            audioFile.Dispose();
+            audioFile = null;
         }
     }
 }
