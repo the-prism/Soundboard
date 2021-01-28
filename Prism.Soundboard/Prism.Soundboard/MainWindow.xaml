@@ -22,7 +22,7 @@
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
             <Label Content="Output device :"/>
             <ComboBox x:Name="OutputDeviceSelector" SelectionChanged="OutputDeviceSelector_SelectionChanged" Height="24">
-                <ComboBoxItem IsSelected="True">Select device</ComboBoxItem>
+                <ComboBoxItem IsSelected="True">Default playback device</ComboBoxItem>
             </ComboBox>
         </StackPanel>
 

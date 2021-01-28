@@ -36,7 +36,7 @@ namespace Prism.Soundboard
 
             this.outputDeviceIndexes = new Dictionary<string, int>();
 
-            for (int n = -1; n < WaveOut.DeviceCount; n++)
+            for (int n = 0; n < WaveOut.DeviceCount; n++)
             {
                 var caps = WaveOut.GetCapabilities(n);
                 OutputDeviceSelector.Items.Add(caps.ProductName);
@@ -45,7 +45,7 @@ namespace Prism.Soundboard
 
             DirectoryInfo fileDirectory = new DirectoryInfo("Files");
             this.filesAndPath = new Dictionary<string, string>();
-            
+
             if (!fileDirectory.Exists)
             {
                 Directory.CreateDirectory("Files");
@@ -89,7 +89,14 @@ namespace Prism.Soundboard
 
         private void OutputDeviceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.selectedOutputDeviceIndex = this.outputDeviceIndexes?[OutputDeviceSelector.SelectedItem.ToString()] ?? -1;
+            try
+            {
+                this.selectedOutputDeviceIndex = this.outputDeviceIndexes?[OutputDeviceSelector.SelectedItem.ToString()] ?? -1;
+            } 
+            catch (Exception)
+            {
+                this.selectedOutputDeviceIndex = -1;
+            }
         }
 
         private void AudioFiles_SelectionChanged(object sender, SelectionChangedEventArgs e)

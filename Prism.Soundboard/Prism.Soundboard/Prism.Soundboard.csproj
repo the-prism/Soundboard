@@ -5,6 +5,13 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>Prism.Soundboard.App</StartupObject>
+    <Authors>Thomas Castonguay-Gagnon</Authors>
+    <Copyright>Thomas Castonguay-Gagnon</Copyright>
+    <PackageLicenseExpression>GPL V3</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/the-prism/Soundboard</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/the-prism/Soundboard</RepositoryUrl>
+    <AssemblyVersion>1.0.0.9</AssemblyVersion>
+    <FileVersion>1.0.0.9</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
