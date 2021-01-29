@@ -24,11 +24,16 @@
             <ComboBox x:Name="OutputDeviceSelector" SelectionChanged="OutputDeviceSelector_SelectionChanged" Height="24">
                 <ComboBoxItem IsSelected="True">Default playback device</ComboBoxItem>
             </ComboBox>
+            <Label Content="Monitor device :"/>
+            <ComboBox x:Name="MonitorDeviceSelector" SelectionChanged="MonitorDeviceSelector_SelectionChanged" Height="24">
+                <ComboBoxItem IsSelected="True">Default playback device</ComboBoxItem>
+            </ComboBox>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
             <Button x:Name="Play" Content="Play" Click="Play_Click" Height="24" Margin="5"/>
             <Button x:Name="Stop" Content="Stop" Click="Stop_Click" Height="24" Margin="5"/>
+            <Slider x:Name="VolumeControl" ValueChanged="VolumeControl_ValueChanged" MinWidth="150" Margin="5" Value="1"/>
         </StackPanel>
 
         <ListBox x:Name="AudioFiles" SelectionChanged="AudioFiles_SelectionChanged"

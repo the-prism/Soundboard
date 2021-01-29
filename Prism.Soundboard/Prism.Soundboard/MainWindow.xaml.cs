@@ -24,11 +24,15 @@ namespace Prism.Soundboard
     public partial class MainWindow : Window
     {
         private WaveOutEvent outputDevice;
+        private WaveOutEvent monitorDevice;
         private AudioFileReader audioFile;
+        private AudioFileReader monitorAudioFile;
         private Dictionary<string, int> outputDeviceIndexes;
         private Dictionary<string, string> filesAndPath;
         private int selectedOutputDeviceIndex;
+        private int selectedMonitorDeviceIndex;
         private string selectedFilePath;
+        private double desiredVolume;
 
         public MainWindow()
         {
@@ -40,6 +44,7 @@ namespace Prism.Soundboard
             {
                 var caps = WaveOut.GetCapabilities(n);
                 OutputDeviceSelector.Items.Add(caps.ProductName);
+                MonitorDeviceSelector.Items.Add(caps.ProductName);
                 this.outputDeviceIndexes.Add(caps.ProductName, n);
             }
 
@@ -66,25 +71,42 @@ namespace Prism.Soundboard
                 outputDevice = new WaveOutEvent() { DeviceNumber = this.selectedOutputDeviceIndex };
                 outputDevice.PlaybackStopped += OnPlaybackStopped;
             }
+
+            if (monitorDevice == null && selectedOutputDeviceIndex != selectedMonitorDeviceIndex)
+            {
+                monitorDevice = new WaveOutEvent() { DeviceNumber = this.selectedMonitorDeviceIndex };
+                monitorDevice.PlaybackStopped += OnPlaybackStopped;
+            }
+
             if (audioFile == null)
             {
                 audioFile = new AudioFileReader(this.selectedFilePath);
+                float convertedVolume = (float)this.desiredVolume / 10f;
+                audioFile.Volume = convertedVolume;
+                monitorAudioFile = new AudioFileReader(this.selectedFilePath);
                 outputDevice.Init(audioFile);
+                monitorDevice?.Init(monitorAudioFile);
             }
             outputDevice.Play();
+            monitorDevice?.Play();
         }
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
             outputDevice?.Stop();
+            monitorDevice?.Stop();
         }
 
         private void OnPlaybackStopped(object sender, StoppedEventArgs args)
         {
-            outputDevice.Dispose();
+            outputDevice?.Dispose();
             outputDevice = null;
-            audioFile.Dispose();
+            monitorDevice?.Dispose();
+            monitorDevice = null;
+            audioFile?.Dispose();
             audioFile = null;
+            monitorAudioFile?.Dispose();
+            monitorAudioFile = null;
         }
 
         private void OutputDeviceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -102,6 +124,23 @@ namespace Prism.Soundboard
         private void AudioFiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.selectedFilePath = this.filesAndPath?[AudioFiles.SelectedItem.ToString()];
+        }
+
+        private void MonitorDeviceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                this.selectedMonitorDeviceIndex = this.outputDeviceIndexes?[MonitorDeviceSelector.SelectedIndex.ToString()] ?? -1;
+            }
+            catch (Exception)
+            {
+                this.selectedMonitorDeviceIndex = -1;
+            }
+        }
+
+        private void VolumeControl_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            this.desiredVolume = VolumeControl.Value;
         }
     }
 }
