@@ -10,13 +10,13 @@
     <PackageLicenseExpression>GPL V3</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/the-prism/Soundboard</PackageProjectUrl>
     <RepositoryUrl>https://github.com/the-prism/Soundboard</RepositoryUrl>
-    <AssemblyVersion>1.0.1.2</AssemblyVersion>
-    <FileVersion>1.0.1.2</FileVersion>
+    <AssemblyVersion>1.0.2.1</AssemblyVersion>
+    <FileVersion>1.0.2.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MahApps.Metro" Version="2.4.3" />
-    <PackageReference Include="MahApps.Metro.IconPacks" Version="4.8.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.BootstrapIcons" Version="4.8.0" />
     <PackageReference Include="NAudio" Version="1.10.0" />
   </ItemGroup>
 
