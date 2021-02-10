@@ -1,17 +1,27 @@
-﻿<Window x:Class="Prism.Soundboard.MainWindow"
+﻿<mah:MetroWindow x:Class="Prism.Soundboard.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:local="clr-namespace:Prism.Soundboard"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Soundboard" Height="450" Width="800"
+        GlowBrush="{DynamicResource MahApps.Brushes.Accent}">
+
+    <mah:MetroWindow.LeftWindowCommands>
+        <mah:WindowCommands>
+            <iconPacks:PackIconBootstrapIcons Height="22" Width="22" Margin="4" Kind="Soundwave" />
+        </mah:WindowCommands>
+    </mah:MetroWindow.LeftWindowCommands>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="32"/>
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -30,14 +40,28 @@
             </ComboBox>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-            <Button x:Name="Play" Content="Play" Click="Play_Click" Height="24" Margin="5"/>
-            <Button x:Name="Stop" Content="Stop" Click="Stop_Click" Height="24" Margin="5"/>
-            <Slider x:Name="VolumeControl" ValueChanged="VolumeControl_ValueChanged" MinWidth="150" Margin="5" Value="1"/>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0,5,0,0">
+            <Button x:Name="Play" Click="Play_Click" Margin="0,0,5,0">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconBootstrapIcons Kind="Play" Margin="0,0,5,0"/>
+                    <TextBlock Text="PLAY"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="Stop" Click="Stop_Click" Margin="5,0,5,0">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconBootstrapIcons Kind="Stop" Margin="0,0,5,0"/>
+                    <TextBlock Text="STOP"/>
+                </StackPanel>
+            </Button>
+            <Slider x:Name="VolumeControl" ValueChanged="VolumeControl_ValueChanged" MinWidth="150" Margin="5,0,0,0" Value="1"/>
         </StackPanel>
 
         <ListBox x:Name="AudioFiles" SelectionChanged="AudioFiles_SelectionChanged"
-                 Grid.Row="2" Grid.Column="1">
+                 Grid.Row="2" Grid.Column="1" Margin="0,5,0,0" BorderBrush="{DynamicResource MahApps.Brushes.Gray5}" BorderThickness="1,1,1,0">
         </ListBox>
+
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="3" Background="{DynamicResource MahApps.Brushes.Accent}">
+            <TextBlock Text="Soundboard by the-prism" HorizontalAlignment="Right" Margin="2" Foreground="{DynamicResource MahApps.Brushes.DataGrid.Selection.Text}"/>
+        </StackPanel>
     </Grid>
-</Window>
+</mah:MetroWindow>

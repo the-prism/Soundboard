@@ -1,4 +1,5 @@
-﻿using NAudio.Wave;
+﻿using MahApps.Metro.Controls;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,7 +22,7 @@ namespace Prism.Soundboard
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         private WaveOutEvent outputDevice;
         private WaveOutEvent monitorDevice;
