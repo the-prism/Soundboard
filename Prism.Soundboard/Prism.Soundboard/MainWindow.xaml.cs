@@ -131,7 +131,7 @@ namespace Prism.Soundboard
         {
             try
             {
-                this.selectedMonitorDeviceIndex = this.outputDeviceIndexes?[MonitorDeviceSelector.SelectedIndex.ToString()] ?? -1;
+                this.selectedMonitorDeviceIndex = this.outputDeviceIndexes?[MonitorDeviceSelector.SelectedItem.ToString()] ?? -1;
             }
             catch (Exception)
             {
