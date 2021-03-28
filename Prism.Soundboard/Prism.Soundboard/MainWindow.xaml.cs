@@ -90,10 +90,13 @@ namespace Prism.Soundboard
 
             if (this.audioFile == null)
             {
-                this.audioFile = new AudioFileReader(this.selectedFilePath);
                 float convertedVolume = (float)this.desiredVolume / 10f;
+
+                this.audioFile = new AudioFileReader(this.selectedFilePath);
                 this.audioFile.Volume = convertedVolume;
                 this.monitorAudioFile = new AudioFileReader(this.selectedFilePath);
+                this.monitorAudioFile.Volume = convertedVolume;
+
                 this.outputDevice.Init(this.audioFile);
                 this.monitorDevice?.Init(this.monitorAudioFile);
             }
@@ -112,10 +115,13 @@ namespace Prism.Soundboard
         {
             this.outputDevice?.Dispose();
             this.outputDevice = null;
+
             this.monitorDevice?.Dispose();
             this.monitorDevice = null;
+
             this.audioFile?.Dispose();
             this.audioFile = null;
+
             this.monitorAudioFile?.Dispose();
             this.monitorAudioFile = null;
         }
