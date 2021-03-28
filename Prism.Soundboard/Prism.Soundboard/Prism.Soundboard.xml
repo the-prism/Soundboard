@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Prism.Soundboard</name>
+    </assembly>
+    <members>
+        <member name="T:Prism.Soundboard.App">
+            <summary>
+            Interaction logic for App.xaml
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:Prism.Soundboard.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Prism.Soundboard.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:Prism.Soundboard.MainWindow">
+            <summary>
+            Interaction logic for MainWindow.xaml
+            </summary>
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="M:Prism.Soundboard.MainWindow.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Prism.Soundboard.MainWindow"/> class.
+            </summary>
+        </member>
+        <member name="M:Prism.Soundboard.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+    </members>
+</doc>
