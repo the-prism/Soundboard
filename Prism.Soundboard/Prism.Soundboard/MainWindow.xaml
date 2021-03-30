@@ -53,7 +53,7 @@
                     <TextBlock Text="STOP"/>
                 </StackPanel>
             </Button>
-            <Slider x:Name="VolumeControl" ValueChanged="VolumeControl_ValueChanged" MinWidth="150" Margin="5,0,0,0" Value="1"/>
+            <Slider x:Name="VolumeControl" ValueChanged="VolumeControl_ValueChanged" MinWidth="150" Margin="5,0,0,0" Value="20"/>
         </StackPanel>
 
         <ListBox x:Name="AudioFiles" SelectionChanged="AudioFiles_SelectionChanged"

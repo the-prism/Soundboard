@@ -90,7 +90,7 @@ namespace Prism.Soundboard
 
             if (this.audioFile == null)
             {
-                float convertedVolume = (float)this.desiredVolume / 10f;
+                float convertedVolume = (float)this.desiredVolume / 100f;
 
                 this.audioFile = new AudioFileReader(this.selectedFilePath);
                 this.audioFile.Volume = convertedVolume;
