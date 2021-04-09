@@ -159,5 +159,12 @@ namespace Prism.Soundboard
         {
             this.desiredVolume = this.VolumeControl.Value;
         }
+
+        private void AudioFiles_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            this.selectedFilePath = this.filesAndPath?[this.AudioFiles.SelectedItem.ToString()];
+
+            this.Play_Click(sender, e);
+        }
     }
 }

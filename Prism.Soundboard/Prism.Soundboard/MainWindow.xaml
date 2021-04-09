@@ -56,7 +56,7 @@
             <Slider x:Name="VolumeControl" ValueChanged="VolumeControl_ValueChanged" MinWidth="150" Margin="5,0,0,0" Value="20"/>
         </StackPanel>
 
-        <ListBox x:Name="AudioFiles" SelectionChanged="AudioFiles_SelectionChanged"
+        <ListBox x:Name="AudioFiles" SelectionChanged="AudioFiles_SelectionChanged" MouseDoubleClick="AudioFiles_MouseDoubleClick"
                  Grid.Row="2" Grid.Column="1" Margin="0,5,0,0" BorderBrush="{DynamicResource MahApps.Brushes.Gray5}" BorderThickness="1,1,1,0">
         </ListBox>
 
