@@ -5,3 +5,6 @@ dotnet_diagnostic.SA1629.severity = suggestion
 
 # SA1515: Single-line comment should be preceded by blank line
 dotnet_diagnostic.SA1515.severity = suggestion
+
+# SA1623: Property summary documentation should match accessors
+dotnet_diagnostic.SA1623.severity = suggestion

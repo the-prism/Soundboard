@@ -11,6 +11,7 @@ namespace Prism.Soundboard
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Text.Json;
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
@@ -45,6 +46,7 @@ namespace Prism.Soundboard
         /// </summary>
         public MainWindow()
         {
+
             this.InitializeComponent();
 
             this.outputDeviceIndexes = new Dictionary<string, int>();
@@ -71,6 +73,8 @@ namespace Prism.Soundboard
                 this.filesAndPath.Add(file.Name, file.FullName);
                 this.AudioFiles.Items.Add(file.Name);
             }
+
+            this.LoadSettings();
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
@@ -164,6 +168,52 @@ namespace Prism.Soundboard
             this.selectedFilePath = this.filesAndPath?[this.AudioFiles.SelectedItem.ToString()];
 
             this.Play_Click(sender, e);
+        }
+
+        private void SaveSettings()
+        {
+            SavedSettings settingsToSave = new SavedSettings()
+            {
+                OutputDeviceIndex = this.selectedOutputDeviceIndex,
+                MonitorDeviceIndex = this.selectedMonitorDeviceIndex,
+                Volume = this.desiredVolume,
+            };
+
+            string content = JsonSerializer.Serialize(settingsToSave);
+
+            File.WriteAllText("settings.json", content);
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            this.SaveSettings();
+        }
+
+        private void LoadSettings()
+        {
+            try
+            {
+                string content = File.ReadAllText("settings.json");
+                SavedSettings restoredSettings = JsonSerializer.Deserialize<SavedSettings>(content);
+
+                if (restoredSettings.OutputDeviceIndex != -1)
+                {
+                    this.OutputDeviceSelector.SelectedItem = this.outputDeviceIndexes.Where(v => v.Value == restoredSettings.OutputDeviceIndex).FirstOrDefault().Key;
+                }
+
+                if (restoredSettings.MonitorDeviceIndex != -1)
+                {
+                    this.MonitorDeviceSelector.SelectedItem = this.outputDeviceIndexes.Where(v => v.Value == restoredSettings.MonitorDeviceIndex).FirstOrDefault().Key;
+                }
+
+                this.VolumeControl.Value = restoredSettings.Volume;
+
+                this.selectedOutputDeviceIndex = restoredSettings.OutputDeviceIndex;
+                this.selectedMonitorDeviceIndex = restoredSettings.MonitorDeviceIndex;
+                this.desiredVolume = restoredSettings.Volume;
+            }
+            catch (FileNotFoundException)
+            { }
         }
     }
 }
