@@ -22,13 +22,12 @@ namespace Prism.Soundboard
     using System.Windows.Navigation;
     using System.Windows.Shapes;
 
-    using MahApps.Metro.Controls;
     using NAudio.Wave;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class MainWindow : Window
     {
         private WaveOutEvent outputDevice;
         private WaveOutEvent monitorDevice;
@@ -90,7 +89,7 @@ namespace Prism.Soundboard
 
             if (this.audioFile == null)
             {
-                float convertedVolume = (float)this.desiredVolume / 100f;
+                float convertedVolume = (float)this.desiredVolume / 10f;
 
                 this.audioFile = new AudioFileReader(this.selectedFilePath);
                 this.audioFile.Volume = convertedVolume;
