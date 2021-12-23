@@ -46,7 +46,6 @@ namespace Prism.Soundboard
         /// </summary>
         public MainWindow()
         {
-
             this.InitializeComponent();
 
             this.outputDeviceIndexes = new Dictionary<string, int>();
@@ -75,6 +74,17 @@ namespace Prism.Soundboard
             }
 
             this.LoadSettings();
+        }
+
+        /// <inheritdoc/>
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            var accentBrush = this.TryFindResource("AccentColorBrush") as SolidColorBrush;
+            if (accentBrush != null)
+            {
+                accentBrush.Color.CreateAccentColors();
+            }
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
@@ -212,8 +222,7 @@ namespace Prism.Soundboard
                 this.selectedMonitorDeviceIndex = restoredSettings.MonitorDeviceIndex;
                 this.desiredVolume = restoredSettings.Volume;
             }
-            catch (FileNotFoundException)
-            { }
+            catch (FileNotFoundException){ }
         }
     }
 }

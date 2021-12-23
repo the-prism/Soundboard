@@ -11,6 +11,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
             <RowDefinition Height="32"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
@@ -22,7 +23,11 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Background="{StaticResource AccentColorBrush}">
+            <TextBlock Text="Prism Soundboard" Style="{StaticResource Header20}" Foreground="White" Margin="10 8 0 8"/>
+        </Grid>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
             <Label Content="Output device :"/>
             <ComboBox x:Name="OutputDeviceSelector" SelectionChanged="OutputDeviceSelector_SelectionChanged" Height="24">
                 <ComboBoxItem IsSelected="True">Default playback device</ComboBoxItem>
@@ -33,26 +38,14 @@
             </ComboBox>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0,5,0,0">
-            <Button x:Name="Play" Click="Play_Click" Margin="0,0,5,0" Padding="5">
-                <Button.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="#f6f0ea" Offset="0"/>
-                        <GradientStop Color="#f1dfd1" Offset="1"/>
-                    </LinearGradientBrush>
-                </Button.Background>
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0,5,0,0">
+            <Button x:Name="Play" Click="Play_Click" Margin="0,0,5,0" Padding="5" Height="28" Style="{StaticResource AccentButton}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconBootstrapIcons Kind="Play" Margin="0,0,5,0"/>
                     <TextBlock Text="PLAY"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="Stop" Click="Stop_Click" Margin="5,0,5,0" Padding="5">
-                <Button.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="#f6f0ea" Offset="0"/>
-                        <GradientStop Color="#f1dfd1" Offset="1"/>
-                    </LinearGradientBrush>
-                </Button.Background>
+            <Button x:Name="Stop" Click="Stop_Click" Margin="5,0,5,0" Padding="5" Height="28">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconBootstrapIcons Kind="Stop" Margin="0,0,5,0"/>
                     <TextBlock Text="STOP"/>
@@ -62,10 +55,10 @@
         </StackPanel>
 
         <ListBox x:Name="AudioFiles" SelectionChanged="AudioFiles_SelectionChanged" MouseDoubleClick="AudioFiles_MouseDoubleClick"
-                 Grid.Row="2" Grid.Column="1" Margin="0,5,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1,1,1,0">
+                 Grid.Row="3" Grid.Column="1" Margin="0,5,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1,1,1,0">
         </ListBox>
 
-        <StackPanel Grid.Row="3" Grid.ColumnSpan="3" Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}">
+        <StackPanel Grid.Row="4" Grid.ColumnSpan="3" Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}">
             <TextBlock Text="Soundboard by the-prism" HorizontalAlignment="Right" Margin="2" Foreground="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
         </StackPanel>
     </Grid>
