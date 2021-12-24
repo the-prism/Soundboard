@@ -40,6 +40,8 @@ namespace Prism.Soundboard
         private int selectedMonitorDeviceIndex;
         private string selectedFilePath;
         private double desiredVolume;
+        private bool simpleMode;
+        private List<Tuple<string, string>> lastFilesPlayed = new List<Tuple<string, string>>(10);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -74,6 +76,28 @@ namespace Prism.Soundboard
             }
 
             this.LoadSettings();
+        }
+
+        private bool SimpleMode
+        {
+            get
+            {
+                return this.simpleMode;
+            }
+
+            set
+            {
+                if (value is true)
+                {
+                    this.AudioFiles.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    this.AudioFiles.Visibility = Visibility.Visible;
+                }
+
+                this.simpleMode = value;
+            }
         }
 
         /// <inheritdoc/>
@@ -154,6 +178,26 @@ namespace Prism.Soundboard
         private void AudioFiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.selectedFilePath = this.filesAndPath?[this.AudioFiles.SelectedItem.ToString()];
+            this.LastSelected(this.selectedFilePath, this.AudioFiles.SelectedItem.ToString());
+        }
+
+        private void LastSelected(string selectedFilePath, string display)
+        {
+            var lastSelection = new Tuple<string, string>(display, selectedFilePath);
+            if (this.lastFilesPlayed.Contains(lastSelection))
+            {
+                return;
+            }
+
+            if (this.lastFilesPlayed.Count < 10)
+            {
+                this.lastFilesPlayed.Add(lastSelection);
+            }
+            else
+            {
+                this.lastFilesPlayed.RemoveAt(0);
+                this.lastFilesPlayed.Add(lastSelection);
+            }
         }
 
         private void MonitorDeviceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -187,6 +231,8 @@ namespace Prism.Soundboard
                 OutputDeviceIndex = this.selectedOutputDeviceIndex,
                 MonitorDeviceIndex = this.selectedMonitorDeviceIndex,
                 Volume = this.desiredVolume,
+                SimpleMode = this.simpleMode,
+                SimpleOptions = this.lastFilesPlayed,
             };
 
             string content = JsonSerializer.Serialize(settingsToSave);
@@ -221,8 +267,10 @@ namespace Prism.Soundboard
                 this.selectedOutputDeviceIndex = restoredSettings.OutputDeviceIndex;
                 this.selectedMonitorDeviceIndex = restoredSettings.MonitorDeviceIndex;
                 this.desiredVolume = restoredSettings.Volume;
+                this.lastFilesPlayed = restoredSettings.SimpleOptions;
+                this.SimpleMode = restoredSettings.SimpleMode;
             }
-            catch (FileNotFoundException){ }
+            catch (FileNotFoundException) { }
         }
     }
 }

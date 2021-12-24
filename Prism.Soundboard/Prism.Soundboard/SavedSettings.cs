@@ -25,5 +25,11 @@ namespace Prism.Soundboard
 
         /// <summary>Previous volume used</summary>
         public double Volume { get; set; }
+
+        /// <summary>Was simple mode on</summary>
+        public bool SimpleMode { get; set; }
+
+        /// <summary>Last 10 files played</summary>
+        public List<Tuple<string, string>> SimpleOptions { get; set; }
     }
 }
