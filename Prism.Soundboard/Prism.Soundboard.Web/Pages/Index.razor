@@ -1,0 +1,31 @@
+﻿@page "/"
+@inject Data.AudioService AudioService
+
+<h1>Prism Soundboard</h1>
+
+<div class="row">
+    <div class="col">
+        <h2>Output Device</h2>
+        @foreach (var output in AudioService.OutputDevices)
+        {
+            <p>@output</p>
+        }
+    </div>
+    <div class="col">
+        <h2>Monitor Device</h2>
+        @foreach (var monitor in AudioService.MonitorDevices)
+        {
+            <p>@monitor</p>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <h2>Audio files</h2>
+    @foreach (var audio in AudioService.AudioFiles)
+    {
+        <p>@audio</p>
+    }
+</div>
+
+<SurveyPrompt Title="How is Blazor working for you?" />

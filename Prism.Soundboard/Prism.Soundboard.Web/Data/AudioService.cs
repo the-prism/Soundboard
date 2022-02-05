@@ -1,34 +1,24 @@
-﻿// <copyright file="MainWindow.xaml.cs" company="the-prism">
+﻿// <copyright file="AudioService.cs" company="the-prism">
 // Copyright (c) the-prism. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace Prism.Soundboard
+namespace Prism.Soundboard.Web.Data
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Text;
+    using System.Runtime.CompilerServices;
     using System.Text.Json;
     using System.Threading.Tasks;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Navigation;
-    using System.Windows.Shapes;
 
     using NAudio.Wave;
 
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    /// <summary>Service responsible for playing audio files</summary>
+    public class AudioService : INotifyPropertyChanged
     {
         private WaveOutEvent outputDevice;
         private WaveOutEvent monitorDevice;
@@ -42,21 +32,23 @@ namespace Prism.Soundboard
         private double desiredVolume;
         private bool simpleMode;
         private List<Tuple<string, string>> lastFilesPlayed = new List<Tuple<string, string>>(10);
+        private List<string> monitorDevices = new List<string>();
+        private List<string> outputDevices = new List<string>();
+        private List<string> files = new List<string>();
+        private string selectedFile = null;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MainWindow"/> class.
-        /// </summary>
-        public MainWindow()
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>Audio service</summary>
+        public AudioService()
         {
-            this.InitializeComponent();
-
             this.outputDeviceIndexes = new Dictionary<string, int>();
 
             for (int n = 0; n < WaveOut.DeviceCount; n++)
             {
                 var caps = WaveOut.GetCapabilities(n);
-                this.OutputDeviceSelector.Items.Add(caps.ProductName);
-                this.MonitorDeviceSelector.Items.Add(caps.ProductName);
+                this.OutputDevices.Add(caps.ProductName);
+                this.MonitorDevices.Add(caps.ProductName);
                 this.outputDeviceIndexes.Add(caps.ProductName, n);
             }
 
@@ -72,10 +64,55 @@ namespace Prism.Soundboard
             foreach (FileInfo file in fileDirectory.GetFiles())
             {
                 this.filesAndPath.Add(file.Name, file.FullName);
-                this.AudioFiles.Items.Add(file.Name);
+                this.AudioFiles.Add(file.Name);
             }
 
             this.LoadSettings();
+        }
+
+        /// <summary>List of output devices</summary>
+        public List<string> OutputDevices
+        {
+            get
+            {
+                return this.outputDevices;
+            }
+        }
+
+        /// <summary>List of monitor devices</summary>
+        public List<string> MonitorDevices
+        {
+            get
+            {
+                return this.monitorDevices;
+            }
+        }
+
+        /// <summary>List of audio files</summary>
+        public List<string> AudioFiles
+        {
+            get
+            {
+                return this.files;
+            }
+        }
+
+        /// <summary>File selected for playback</summary>
+        public string SelectedFile
+        {
+            get
+            {
+                return this.selectedFile;
+            }
+
+            set
+            {
+                if (this.selectedFile != value)
+                {
+                    this.selectedFile = value;
+                    this.OnPropertyChanged();
+                }
+            }
         }
 
         private bool SimpleMode
@@ -87,31 +124,11 @@ namespace Prism.Soundboard
 
             set
             {
-                if (value is true)
-                {
-                    this.AudioFiles.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    this.AudioFiles.Visibility = Visibility.Visible;
-                }
-
                 this.simpleMode = value;
             }
         }
 
-        /// <inheritdoc/>
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            var accentBrush = this.TryFindResource("AccentColorBrush") as SolidColorBrush;
-            if (accentBrush != null)
-            {
-                accentBrush.Color.CreateAccentColors();
-            }
-        }
-
-        private void Play_Click(object sender, RoutedEventArgs e)
+        public void Play()
         {
             if (this.outputDevice == null)
             {
@@ -142,7 +159,7 @@ namespace Prism.Soundboard
             this.monitorDevice?.Play();
         }
 
-        private void Stop_Click(object sender, RoutedEventArgs e)
+        public void Stop()
         {
             this.outputDevice?.Stop();
             this.monitorDevice?.Stop();
@@ -163,11 +180,11 @@ namespace Prism.Soundboard
             this.monitorAudioFile = null;
         }
 
-        private void OutputDeviceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void OutputDeviceSelector(string device)
         {
             try
             {
-                this.selectedOutputDeviceIndex = this.outputDeviceIndexes?[this.OutputDeviceSelector.SelectedItem.ToString()] ?? -1;
+                this.selectedOutputDeviceIndex = this.outputDeviceIndexes?[device] ?? -1;
             }
             catch (Exception)
             {
@@ -175,10 +192,42 @@ namespace Prism.Soundboard
             }
         }
 
-        private void AudioFiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void MonitorDeviceSelector(string device)
         {
-            this.selectedFilePath = this.filesAndPath?[this.AudioFiles.SelectedItem.ToString()];
-            this.LastSelected(this.selectedFilePath, this.AudioFiles.SelectedItem.ToString());
+            try
+            {
+                this.selectedMonitorDeviceIndex = this.outputDeviceIndexes?[device] ?? -1;
+            }
+            catch (Exception)
+            {
+                this.selectedMonitorDeviceIndex = -1;
+            }
+        }
+
+        public void SelectAudioFile(string file)
+        {
+            this.selectedFilePath = this.filesAndPath?[file];
+            this.LastSelected(this.selectedFilePath, file);
+        }
+
+        private void VolumeControl(double volume)
+        {
+            this.desiredVolume = volume;
+        }
+
+        private void PlayImmediate(string file)
+        {
+            this.selectedFilePath = this.filesAndPath?[file];
+
+            this.Play();
+        }
+
+        /// <summary>Create the OnPropertyChanged method to raise the event
+        /// The calling member's name will be used as the parameter.</summary>
+        /// <param name="name"></param>
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         private void LastSelected(string selectedFilePath, string display)
@@ -198,30 +247,6 @@ namespace Prism.Soundboard
                 this.lastFilesPlayed.RemoveAt(0);
                 this.lastFilesPlayed.Add(lastSelection);
             }
-        }
-
-        private void MonitorDeviceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            try
-            {
-                this.selectedMonitorDeviceIndex = this.outputDeviceIndexes?[this.MonitorDeviceSelector.SelectedItem.ToString()] ?? -1;
-            }
-            catch (Exception)
-            {
-                this.selectedMonitorDeviceIndex = -1;
-            }
-        }
-
-        private void VolumeControl_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            this.desiredVolume = this.VolumeControl.Value;
-        }
-
-        private void AudioFiles_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            this.selectedFilePath = this.filesAndPath?[this.AudioFiles.SelectedItem.ToString()];
-
-            this.Play_Click(sender, e);
         }
 
         private void SaveSettings()
@@ -254,15 +279,15 @@ namespace Prism.Soundboard
 
                 if (restoredSettings.OutputDeviceIndex != -1)
                 {
-                    this.OutputDeviceSelector.SelectedItem = this.outputDeviceIndexes.Where(v => v.Value == restoredSettings.OutputDeviceIndex).FirstOrDefault().Key;
+                    this.selectedOutputDeviceIndex = restoredSettings.OutputDeviceIndex;
                 }
 
                 if (restoredSettings.MonitorDeviceIndex != -1)
                 {
-                    this.MonitorDeviceSelector.SelectedItem = this.outputDeviceIndexes.Where(v => v.Value == restoredSettings.MonitorDeviceIndex).FirstOrDefault().Key;
+                    this.selectedMonitorDeviceIndex = restoredSettings.MonitorDeviceIndex;
                 }
 
-                this.VolumeControl.Value = restoredSettings.Volume;
+                this.desiredVolume = restoredSettings.Volume;
 
                 this.selectedOutputDeviceIndex = restoredSettings.OutputDeviceIndex;
                 this.selectedMonitorDeviceIndex = restoredSettings.MonitorDeviceIndex;
