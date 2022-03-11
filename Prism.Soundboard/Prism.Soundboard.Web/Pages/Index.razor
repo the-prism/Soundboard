@@ -8,24 +8,58 @@
         <h2>Output Device</h2>
         @foreach (var output in AudioService.OutputDevices)
         {
-            <p>@output</p>
+            <div class="row mb-2">
+                @if (AudioService.SelectedAudioOutputDevice == output)
+                {
+                    <button type="button" class="btn btn-primary" @onclick="@(() => AudioService.SelectedAudioOutputDevice = output)">@output</button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-secondary" @onclick="@(() => AudioService.SelectedAudioOutputDevice = output)">@output</button>
+                }
+            </div>
         }
     </div>
     <div class="col">
         <h2>Monitor Device</h2>
         @foreach (var monitor in AudioService.MonitorDevices)
         {
-            <p>@monitor</p>
+            <div class="row mb-2">
+                @if (AudioService.SelectedAudioMonitorDevice == monitor)
+                {
+                    <button type="button" class="btn btn-primary" @onclick="@(() => AudioService.SelectedAudioMonitorDevice = monitor)">@monitor</button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-secondary" @onclick="@(() => AudioService.SelectedAudioMonitorDevice = monitor)">@monitor</button>
+                }
+            </div>
         }
     </div>
 </div>
 
 <div class="row">
-    <h2>Audio files</h2>
-    @foreach (var audio in AudioService.AudioFiles)
-    {
-        <p>@audio</p>
-    }
+    <div class="col">
+        <button type="button" class="btn btn-danger" @onclick="@(()=> AudioService.Play())">Play</button>
+        <button type="button" class="btn btn-secondary" @onclick="@(()=> AudioService.Stop())">Stop</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <h2>Audio files</h2>
+        @foreach (var audio in AudioService.AudioFiles)
+        {
+            @if (AudioService.SelectedFile == audio)
+            {
+                <button type="button" class="btn btn-primary" @onclick="@(() => AudioService.SelectedFile = audio)">@audio</button>
+            }
+            else
+            {
+                <button type="button" class="btn btn-secondary" @onclick="@(() => AudioService.SelectedFile = audio)">@audio</button>
+            }
+        }
+    </div>
 </div>
 
 <SurveyPrompt Title="How is Blazor working for you?" />

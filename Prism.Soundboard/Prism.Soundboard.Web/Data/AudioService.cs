@@ -97,6 +97,34 @@ namespace Prism.Soundboard.Web.Data
             }
         }
 
+        /// <summary>Select the main output device</summary>
+        public string SelectedAudioOutputDevice
+        {
+            get
+            {
+                return this.outputDeviceIndexes.Where(m => m.Value == this.selectedOutputDeviceIndex).ToList()[0].Key;
+            }
+
+            set
+            {
+                this.OutputDeviceSelector(value);
+            }
+        }
+
+        /// <summary>Select monitor device</summary>
+        public string SelectedAudioMonitorDevice
+        {
+            get
+            {
+                return this.outputDeviceIndexes.Where(m => m.Value == this.selectedMonitorDeviceIndex).ToList()[0].Key;
+            }
+
+            set
+            {
+                this.MonitorDeviceSelector(value);
+            }
+        }
+
         /// <summary>File selected for playback</summary>
         public string SelectedFile
         {
@@ -110,6 +138,7 @@ namespace Prism.Soundboard.Web.Data
                 if (this.selectedFile != value)
                 {
                     this.selectedFile = value;
+                    this.SelectAudioFile(value);
                     this.OnPropertyChanged();
                 }
             }
@@ -128,6 +157,7 @@ namespace Prism.Soundboard.Web.Data
             }
         }
 
+        /// <summary>Play the selected audio file</summary>
         public void Play()
         {
             if (this.outputDevice == null)
