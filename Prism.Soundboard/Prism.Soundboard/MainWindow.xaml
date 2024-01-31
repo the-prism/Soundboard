@@ -12,7 +12,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
-            <RowDefinition Height="32"/>
+            <RowDefinition Height="64"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="20"/>
@@ -27,15 +27,23 @@
             <TextBlock Text="Prism Soundboard" Style="{StaticResource Header20}" Foreground="White" Margin="10 8 0 8"/>
         </Grid>
 
-        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-            <Label Content="Output device :"/>
-            <ComboBox x:Name="OutputDeviceSelector" SelectionChanged="OutputDeviceSelector_SelectionChanged" Height="24">
-                <ComboBoxItem IsSelected="True">Default playback device</ComboBoxItem>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Output device :"/>
+                <ComboBox x:Name="OutputDeviceSelector" SelectionChanged="OutputDeviceSelector_SelectionChanged" Height="24">
+                    <ComboBoxItem IsSelected="True">Default playback device</ComboBoxItem>
+                </ComboBox>
+                <Label Content="Monitor device :"/>
+                <ComboBox x:Name="MonitorDeviceSelector" SelectionChanged="MonitorDeviceSelector_SelectionChanged" Height="24">
+                    <ComboBoxItem IsSelected="True">Default playback device</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+            <Label Content="Input device :"/>
+                <ComboBox x:Name="InputDeviceSelector" SelectionChanged="InputDeviceSelector_SelectionChanged" Height="24">
+                <ComboBoxItem IsSelected="True">Default input device</ComboBoxItem>
             </ComboBox>
-            <Label Content="Monitor device :"/>
-            <ComboBox x:Name="MonitorDeviceSelector" SelectionChanged="MonitorDeviceSelector_SelectionChanged" Height="24">
-                <ComboBoxItem IsSelected="True">Default playback device</ComboBoxItem>
-            </ComboBox>
+            </StackPanel>
         </StackPanel>
 
         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0,5,0,0">
@@ -52,6 +60,13 @@
                 </StackPanel>
             </Button>
             <Slider x:Name="VolumeControl" ValueChanged="VolumeControl_ValueChanged" MinWidth="150" Margin="5,0,0,0" Value="20"/>
+
+            <Button x:Name="Passthrough" Click="Passthrough_Click" Margin="5,0,5,0" Padding="5" Height="28">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconBootstrapIcons Kind="Record" Margin="0,0,5,0"/>
+                    <TextBlock x:Name="Passthrough_Text" Text="Record"/>
+                </StackPanel>
+            </Button>
         </StackPanel>
 
         <ListBox x:Name="AudioFiles" SelectionChanged="AudioFiles_SelectionChanged" MouseDoubleClick="AudioFiles_MouseDoubleClick"

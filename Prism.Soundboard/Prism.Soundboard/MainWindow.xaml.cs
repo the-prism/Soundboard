@@ -32,12 +32,17 @@ namespace Prism.Soundboard
     {
         private WaveOutEvent outputDevice;
         private WaveOutEvent monitorDevice;
+        private WaveInEvent inputMic;
+        private WaveOutEvent inputDevice;
+        private BufferedWaveProvider waveProvider;
         private AudioFileReader audioFile;
         private AudioFileReader monitorAudioFile;
         private Dictionary<string, int> outputDeviceIndexes;
+        private Dictionary<string, int> inputDeviceIndexes;
         private Dictionary<string, string> filesAndPath;
         private int selectedOutputDeviceIndex;
         private int selectedMonitorDeviceIndex;
+        private int selectedInputDeviceIndex;
         private string selectedFilePath;
         private double desiredVolume;
         private bool simpleMode;
@@ -51,6 +56,7 @@ namespace Prism.Soundboard
             this.InitializeComponent();
 
             this.outputDeviceIndexes = new Dictionary<string, int>();
+            this.inputDeviceIndexes = new Dictionary<string, int>();
 
             for (int n = 0; n < WaveOut.DeviceCount; n++)
             {
@@ -58,6 +64,13 @@ namespace Prism.Soundboard
                 this.OutputDeviceSelector.Items.Add(caps.ProductName);
                 this.MonitorDeviceSelector.Items.Add(caps.ProductName);
                 this.outputDeviceIndexes.Add(caps.ProductName, n);
+            }
+
+            for (int n = 0; n < WaveIn.DeviceCount; n++)
+            {
+                var caps = WaveIn.GetCapabilities(n);
+                this.InputDeviceSelector.Items.Add(caps.ProductName);
+                this.inputDeviceIndexes.Add(caps.ProductName, n);
             }
 
             DirectoryInfo fileDirectory = new DirectoryInfo("Files");
@@ -163,6 +176,17 @@ namespace Prism.Soundboard
             this.monitorAudioFile = null;
         }
 
+        private void OnRecordStopped(object sender, StoppedEventArgs args)
+        {
+            this.inputMic?.Dispose();
+            this.inputMic = null;
+
+            this.inputDevice?.Dispose();
+            this.inputDevice = null;
+
+            this.waveProvider = null;
+        }
+
         private void OutputDeviceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -212,6 +236,18 @@ namespace Prism.Soundboard
             }
         }
 
+        private void InputDeviceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                this.selectedInputDeviceIndex = this.inputDeviceIndexes?[this.InputDeviceSelector.SelectedItem.ToString()] ?? -1;
+            }
+            catch (Exception)
+            {
+                this.selectedInputDeviceIndex = -1;
+            }
+        }
+
         private void VolumeControl_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             this.desiredVolume = this.VolumeControl.Value;
@@ -230,6 +266,7 @@ namespace Prism.Soundboard
             {
                 OutputDeviceIndex = this.selectedOutputDeviceIndex,
                 MonitorDeviceIndex = this.selectedMonitorDeviceIndex,
+                InputMicIndex = this.selectedInputDeviceIndex,
                 Volume = this.desiredVolume,
                 SimpleMode = this.simpleMode,
                 SimpleOptions = this.lastFilesPlayed,
@@ -262,16 +299,55 @@ namespace Prism.Soundboard
                     this.MonitorDeviceSelector.SelectedItem = this.outputDeviceIndexes.Where(v => v.Value == restoredSettings.MonitorDeviceIndex).FirstOrDefault().Key;
                 }
 
+                if (restoredSettings.InputMicIndex != -1)
+                {
+                    this.InputDeviceSelector.SelectedItem = this.inputDeviceIndexes.Where(v => v.Value == restoredSettings.InputMicIndex).FirstOrDefault().Key;
+                }
+
                 this.VolumeControl.Value = restoredSettings.Volume;
 
                 this.selectedOutputDeviceIndex = restoredSettings.OutputDeviceIndex;
                 this.selectedMonitorDeviceIndex = restoredSettings.MonitorDeviceIndex;
+                this.selectedInputDeviceIndex = restoredSettings.InputMicIndex;
                 this.desiredVolume = restoredSettings.Volume;
                 this.lastFilesPlayed = restoredSettings.SimpleOptions;
                 this.SimpleMode = restoredSettings.SimpleMode;
             }
             catch (FileNotFoundException)
             {
+            }
+        }
+
+        private void Passthrough_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.inputMic is null)
+            {
+                this.Passthrough_Text.Text = "Stop";
+
+                this.inputDevice = new WaveOutEvent() { DeviceNumber = this.selectedOutputDeviceIndex };
+                this.inputDevice.PlaybackStopped += this.OnRecordStopped;
+
+                this.inputMic = new WaveInEvent() { DeviceNumber = this.selectedInputDeviceIndex };
+                this.inputMic.RecordingStopped += this.OnRecordStopped;
+
+                this.waveProvider = new BufferedWaveProvider(this.inputMic.WaveFormat);
+
+                this.inputMic.DataAvailable += (s, e) =>
+                {
+                    this.waveProvider.AddSamples(e.Buffer, 0, e.BytesRecorded);
+                };
+
+                this.inputDevice.Init(this.waveProvider);
+
+                this.inputMic.StartRecording();
+                this.inputDevice.Play();
+            }
+            else
+            {
+                this.Passthrough_Text.Text = "Record";
+
+                this.inputMic.StopRecording();
+                this.inputDevice.Stop();
             }
         }
     }

@@ -23,6 +23,9 @@ namespace Prism.Soundboard
         /// <summary>Slected device for monitoring</summary>
         public int MonitorDeviceIndex { get; set; }
 
+        /// <summary>Slected microphone index</summary>
+        public int InputMicIndex { get; set; }
+
         /// <summary>Previous volume used</summary>
         public double Volume { get; set; }
 

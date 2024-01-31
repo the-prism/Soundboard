@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.22000.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>Prism.Soundboard.App</StartupObject>
     <Authors>Thomas Castonguay-Gagnon</Authors>
@@ -14,6 +14,7 @@
     <FileVersion>1.1.1.1</FileVersion>
     <Version>1.0.4</Version>
     <NoWarn>$(NoWarn);1573;1591;1712;SA0001</NoWarn>
+    <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -29,8 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MahApps.Metro.IconPacks.BootstrapIcons" Version="4.8.0" />
-    <PackageReference Include="NAudio" Version="2.0.1" />
+    <PackageReference Include="MahApps.Metro.IconPacks.BootstrapIcons" Version="4.11.0" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
