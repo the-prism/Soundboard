@@ -41,7 +41,7 @@ namespace Prism.Soundboard.Web
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
-            services.AddSingleton<AudioService>();
+            //services.AddSingleton<AudioService>();
         }
 
         /// <summary>

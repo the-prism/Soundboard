@@ -310,7 +310,7 @@ namespace Prism.Soundboard
                 this.selectedMonitorDeviceIndex = restoredSettings.MonitorDeviceIndex;
                 this.selectedInputDeviceIndex = restoredSettings.InputMicIndex;
                 this.desiredVolume = restoredSettings.Volume;
-                this.lastFilesPlayed = restoredSettings.SimpleOptions;
+                this.lastFilesPlayed = restoredSettings.SimpleOptions ?? new List<Tuple<string, string>>(10);
                 this.SimpleMode = restoredSettings.SimpleMode;
             }
             catch (FileNotFoundException)
@@ -327,7 +327,7 @@ namespace Prism.Soundboard
                 this.inputDevice = new WaveOutEvent() { DeviceNumber = this.selectedOutputDeviceIndex };
                 this.inputDevice.PlaybackStopped += this.OnRecordStopped;
 
-                this.inputMic = new WaveInEvent() { DeviceNumber = this.selectedInputDeviceIndex };
+                this.inputMic = new WaveInEvent() { DeviceNumber = this.selectedInputDeviceIndex, WaveFormat = new WaveFormat(48000, 16, 2) };
                 this.inputMic.RecordingStopped += this.OnRecordStopped;
 
                 this.waveProvider = new BufferedWaveProvider(this.inputMic.WaveFormat);

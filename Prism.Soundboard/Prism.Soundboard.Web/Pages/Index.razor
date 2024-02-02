@@ -1,37 +1,36 @@
 ﻿@page "/"
-@inject Data.AudioService AudioService
 
 <h1>Prism Soundboard</h1>
 
 <div class="row">
     <div class="col">
         <h2>Output Device</h2>
-        @foreach (var output in AudioService.OutputDevices)
+        @foreach (var output in Program.AudioService.OutputDevices)
         {
             <div class="row mb-2">
-                @if (AudioService.SelectedAudioOutputDevice == output)
+                @if (Program.AudioService.SelectedAudioOutputDevice == output)
                 {
-                    <button type="button" class="btn btn-primary" @onclick="@(() => AudioService.SelectedAudioOutputDevice = output)">@output</button>
+                    <button type="button" class="btn btn-primary" @onclick="@(() => Program.AudioService.SelectedAudioOutputDevice = output)">@output</button>
                 }
                 else
                 {
-                    <button type="button" class="btn btn-secondary" @onclick="@(() => AudioService.SelectedAudioOutputDevice = output)">@output</button>
+                    <button type="button" class="btn btn-secondary" @onclick="@(() => Program.AudioService.SelectedAudioOutputDevice = output)">@output</button>
                 }
             </div>
         }
     </div>
     <div class="col">
         <h2>Monitor Device</h2>
-        @foreach (var monitor in AudioService.MonitorDevices)
+        @foreach (var monitor in Program.AudioService.MonitorDevices)
         {
             <div class="row mb-2">
-                @if (AudioService.SelectedAudioMonitorDevice == monitor)
+                @if (Program.AudioService.SelectedAudioMonitorDevice == monitor)
                 {
-                    <button type="button" class="btn btn-primary" @onclick="@(() => AudioService.SelectedAudioMonitorDevice = monitor)">@monitor</button>
+                    <button type="button" class="btn btn-primary" @onclick="@(() => Program.AudioService.SelectedAudioMonitorDevice = monitor)">@monitor</button>
                 }
                 else
                 {
-                    <button type="button" class="btn btn-secondary" @onclick="@(() => AudioService.SelectedAudioMonitorDevice = monitor)">@monitor</button>
+                    <button type="button" class="btn btn-secondary" @onclick="@(() => Program.AudioService.SelectedAudioMonitorDevice = monitor)">@monitor</button>
                 }
             </div>
         }
@@ -40,23 +39,23 @@
 
 <div class="row">
     <div class="col">
-        <button type="button" class="btn btn-danger" @onclick="@(()=> AudioService.Play())">Play</button>
-        <button type="button" class="btn btn-secondary" @onclick="@(()=> AudioService.Stop())">Stop</button>
+        <button type="button" class="btn btn-danger" @onclick="@(()=> Program.AudioService.Play())">Play</button>
+        <button type="button" class="btn btn-secondary" @onclick="@(()=> Program.AudioService.Stop())">Stop</button>
     </div>
 </div>
 
 <div class="row">
     <div class="col">
         <h2>Audio files</h2>
-        @foreach (var audio in AudioService.AudioFiles)
+        @foreach (var audio in Program.AudioService.AudioFiles)
         {
-            @if (AudioService.SelectedFile == audio)
+            @if (Program.AudioService.SelectedFile == audio)
             {
-                <button type="button" class="btn btn-primary" @onclick="@(() => AudioService.SelectedFile = audio)">@audio</button>
+                <button type="button" class="btn btn-primary" @onclick="@(() => Program.AudioService.SelectedFile = audio)">@audio</button>
             }
             else
             {
-                <button type="button" class="btn btn-secondary" @onclick="@(() => AudioService.SelectedFile = audio)">@audio</button>
+                <button type="button" class="btn btn-secondary" @onclick="@(() => Program.AudioService.SelectedFile = audio)">@audio</button>
             }
         }
     </div>
