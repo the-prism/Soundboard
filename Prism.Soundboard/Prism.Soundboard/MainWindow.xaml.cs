@@ -158,6 +158,11 @@ namespace Prism.Soundboard
             this.monitorDevice?.Dispose();
             this.audioFile?.Dispose();
             this.inputMic?.Dispose();
+            this.favorite1?.Dispose();
+            this.favorite2?.Dispose();
+            this.favorite3?.Dispose();
+            this.favorite4?.Dispose();
+            this.favorite5?.Dispose();
         }
 
         /// <summary>Refresh list after favorites change</summary>
