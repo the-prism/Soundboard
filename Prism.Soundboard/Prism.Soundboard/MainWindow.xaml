@@ -8,6 +8,7 @@
         xmlns:local="clr-namespace:Prism.Soundboard"
         mc:Ignorable="d"
         Title="Soundboard" Height="650" Width="800" Closed="Window_Closed">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>

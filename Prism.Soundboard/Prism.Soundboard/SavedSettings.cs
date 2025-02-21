@@ -36,5 +36,8 @@ namespace Prism.Soundboard
 
         /// <summary>Last 10 files played</summary>
         public List<Tuple<string, string>> SimpleOptions { get; set; }
+
+        /// <summary>Favorites</summary>
+        public Dictionary<int, string> Favorites { get; set; }
     }
 }
