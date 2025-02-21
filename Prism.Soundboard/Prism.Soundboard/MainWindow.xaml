@@ -8,7 +8,6 @@
         xmlns:local="clr-namespace:Prism.Soundboard"
         mc:Ignorable="d"
         Title="Soundboard" Height="650" Width="800" Closed="Window_Closed">
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
@@ -39,10 +38,10 @@
                 </ComboBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-            <Label Content="Input device :"/>
+                <Label Content="Input device :"/>
                 <ComboBox x:Name="InputDeviceSelector" SelectionChanged="InputDeviceSelector_SelectionChanged" Height="24">
-                <ComboBoxItem IsSelected="True">Default input device</ComboBoxItem>
-            </ComboBox>
+                    <ComboBoxItem IsSelected="True">Default input device</ComboBoxItem>
+                </ComboBox>
             </StackPanel>
         </StackPanel>
 

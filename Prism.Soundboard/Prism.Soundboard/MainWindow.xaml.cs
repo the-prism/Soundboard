@@ -10,25 +10,19 @@ namespace Prism.Soundboard
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Text;
     using System.Text.Json;
-    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
     using System.Windows.Input;
     using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Navigation;
-    using System.Windows.Shapes;
 
     using NAudio.Wave;
+    using UnManaged;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IDisposable
     {
         private WaveOutEvent outputDevice;
         private WaveOutEvent monitorDevice;
@@ -47,6 +41,8 @@ namespace Prism.Soundboard
         private double desiredVolume;
         private bool simpleMode;
         private List<Tuple<string, string>> lastFilesPlayed = new List<Tuple<string, string>>(10);
+        private HotKey play = null;
+        private HotKey stop = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -89,6 +85,9 @@ namespace Prism.Soundboard
             }
 
             this.LoadSettings();
+
+            this.play = new HotKey(Key.F1, KeyModifier.None, this.OnHotKeyHandler);
+            this.stop = new HotKey(Key.F1, KeyModifier.Ctrl, this.OnHotKeyHandler);
         }
 
         private bool SimpleMode
@@ -122,6 +121,17 @@ namespace Prism.Soundboard
             {
                 accentBrush.Color.CreateAccentColors();
             }
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            this.play?.Dispose();
+            this.stop?.Dispose();
+            this.outputDevice?.Dispose();
+            this.monitorDevice?.Dispose();
+            this.audioFile?.Dispose();
+            this.inputMic?.Dispose();
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
@@ -348,6 +358,27 @@ namespace Prism.Soundboard
 
                 this.inputMic.StopRecording();
                 this.inputDevice.Stop();
+            }
+        }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.P)
+            {
+                this.Play_Click(null, null); // Call your method here
+                e.Handled = true; // Mark the event as handled
+            }
+        }
+
+        private void OnHotKeyHandler(HotKey hotKey)
+        {
+            if (hotKey == this.play)
+            {
+                this.Play_Click(null, null);
+            }
+            else if (hotKey == this.stop)
+            {
+                this.Stop_Click(null, null);
             }
         }
     }

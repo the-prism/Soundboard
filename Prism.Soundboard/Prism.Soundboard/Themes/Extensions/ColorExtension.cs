@@ -71,10 +71,10 @@ namespace Prism.Soundboard
             resources.Add(PressedBorderColorDark, color.GetPressedBorderColorDark());
             resources.Add(PressedBackgroundColorDark, color.GetPressedBackgroundColorDark());
 
-            resources.Add(AccentBrush, new SolidColorBrush((Color) resources[AccentColor]));
+            resources.Add(AccentBrush, new SolidColorBrush((Color)resources[AccentColor]));
             resources.Add(AccentBrush1, new SolidColorBrush((Color)resources[AccentColor1]));
-            resources.Add(MouseOverBorderBrush, new SolidColorBrush((Color) resources[MouseOverBorderColor]));
-            resources.Add(MouseOverBackgroundBrush, new SolidColorBrush((Color) resources[MouseOverBackgroundColor]));
+            resources.Add(MouseOverBorderBrush, new SolidColorBrush((Color)resources[MouseOverBorderColor]));
+            resources.Add(MouseOverBackgroundBrush, new SolidColorBrush((Color)resources[MouseOverBackgroundColor]));
             resources.Add(PressedBorderBrush, new SolidColorBrush((Color)resources[PressedBorderColor]));
             resources.Add(PressedBackgroundBrush, new SolidColorBrush((Color)resources[PressedBackgroundColor]));
             resources.Add(PressedBorderBrushDark, new SolidColorBrush((Color)resources[PressedBorderColorDark]));

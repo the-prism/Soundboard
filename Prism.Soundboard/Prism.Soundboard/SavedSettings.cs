@@ -15,7 +15,9 @@ namespace Prism.Soundboard
     public class SavedSettings
     {
         /// <summary>Initializes a new instance of the <see cref="SavedSettings"/> class.</summary>
-        public SavedSettings() { }
+        public SavedSettings()
+        {
+        }
 
         /// <summary>Selected output device index</summary>
         public int OutputDeviceIndex { get; set; }
