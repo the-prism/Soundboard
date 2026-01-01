@@ -43,13 +43,13 @@ namespace Prism.Soundboard
         private bool simpleMode;
         private List<Tuple<string, string>> lastFilesPlayed = new List<Tuple<string, string>>(10);
         private Dictionary<int, string> favorites = new Dictionary<int, string>();
-        private HotKey play = null;
-        private HotKey stop = null;
-        private HotKey favorite1 = null;
-        private HotKey favorite2 = null;
-        private HotKey favorite3 = null;
-        private HotKey favorite4 = null;
-        private HotKey favorite5 = null;
+        //private HotKey play = null;
+        //private HotKey stop = null;
+        //private HotKey favorite1 = null;
+        //private HotKey favorite2 = null;
+        //private HotKey favorite3 = null;
+        //private HotKey favorite4 = null;
+        //private HotKey favorite5 = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -101,13 +101,13 @@ namespace Prism.Soundboard
                 this.AudioFiles.Items.Add(content);
             }
 
-            this.play = new HotKey(Key.F1, KeyModifier.None, this.OnHotKeyHandler);
-            this.stop = new HotKey(Key.F1, KeyModifier.Ctrl, this.OnHotKeyHandler);
-            this.favorite1 = new HotKey(Key.F2, KeyModifier.None, this.OnHotKeyHandler);
-            this.favorite2 = new HotKey(Key.F3, KeyModifier.None, this.OnHotKeyHandler);
-            this.favorite3 = new HotKey(Key.F4, KeyModifier.None, this.OnHotKeyHandler);
-            this.favorite4 = new HotKey(Key.F5, KeyModifier.None, this.OnHotKeyHandler);
-            this.favorite5 = new HotKey(Key.F6, KeyModifier.None, this.OnHotKeyHandler);
+            //this.play = new HotKey(Key.F1, KeyModifier.None, this.OnHotKeyHandler);
+            //this.stop = new HotKey(Key.F1, KeyModifier.Ctrl, this.OnHotKeyHandler);
+            //this.favorite1 = new HotKey(Key.F2, KeyModifier.None, this.OnHotKeyHandler);
+            //this.favorite2 = new HotKey(Key.F3, KeyModifier.None, this.OnHotKeyHandler);
+            //this.favorite3 = new HotKey(Key.F4, KeyModifier.None, this.OnHotKeyHandler);
+            //this.favorite4 = new HotKey(Key.F5, KeyModifier.None, this.OnHotKeyHandler);
+            //this.favorite5 = new HotKey(Key.F6, KeyModifier.None, this.OnHotKeyHandler);
         }
 
         /// <summary>List of favorites for hotkeys</summary>
@@ -152,17 +152,17 @@ namespace Prism.Soundboard
         /// <inheritdoc/>
         public void Dispose()
         {
-            this.play?.Dispose();
-            this.stop?.Dispose();
+            //this.play?.Dispose();
+            //this.stop?.Dispose();
             this.outputDevice?.Dispose();
             this.monitorDevice?.Dispose();
             this.audioFile?.Dispose();
             this.inputMic?.Dispose();
-            this.favorite1?.Dispose();
-            this.favorite2?.Dispose();
-            this.favorite3?.Dispose();
-            this.favorite4?.Dispose();
-            this.favorite5?.Dispose();
+            //this.favorite1?.Dispose();
+            //this.favorite2?.Dispose();
+            //this.favorite3?.Dispose();
+            //this.favorite4?.Dispose();
+            //this.favorite5?.Dispose();
         }
 
         /// <summary>Refresh list after favorites change</summary>
@@ -400,34 +400,34 @@ namespace Prism.Soundboard
 
         private void OnHotKeyHandler(HotKey hotKey)
         {
-            if (hotKey == this.play)
-            {
-                this.PlayAudio(false);
-            }
-            else if (hotKey == this.stop)
-            {
-                this.Stop_Click(null, null);
-            }
-            else if (hotKey == this.favorite1)
-            {
-                this.PlayFavorite(1);
-            }
-            else if (hotKey == this.favorite2)
-            {
-                this.PlayFavorite(2);
-            }
-            else if (hotKey == this.favorite3)
-            {
-                this.PlayFavorite(3);
-            }
-            else if (hotKey == this.favorite4)
-            {
-                this.PlayFavorite(4);
-            }
-            else if (hotKey == this.favorite5)
-            {
-                this.PlayFavorite(5);
-            }
+            //if (hotKey == this.play)
+            //{
+            //    this.PlayAudio(false);
+            //}
+            //else if (hotKey == this.stop)
+            //{
+            //    this.Stop_Click(null, null);
+            //}
+            //else if (hotKey == this.favorite1)
+            //{
+            //    this.PlayFavorite(1);
+            //}
+            //else if (hotKey == this.favorite2)
+            //{
+            //    this.PlayFavorite(2);
+            //}
+            //else if (hotKey == this.favorite3)
+            //{
+            //    this.PlayFavorite(3);
+            //}
+            //else if (hotKey == this.favorite4)
+            //{
+            //    this.PlayFavorite(4);
+            //}
+            //else if (hotKey == this.favorite5)
+            //{
+            //    this.PlayFavorite(5);
+            //}
         }
 
         private void PlayFavorite(int id)
@@ -436,7 +436,7 @@ namespace Prism.Soundboard
             this.PlayAudio(true);
         }
 
-        private void PlayAudio(bool favorite)
+        public async void PlayAudio(bool favorite)
         {
             if (this.outputDevice == null)
             {
