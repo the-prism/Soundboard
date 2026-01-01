@@ -5,9 +5,13 @@
 
 namespace Prism.Soundboard
 {
-    using Microsoft.Extensions.Hosting;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Prism.Soundboard.Services;
     using System;
     using System.Collections.Generic;
     using System.Configuration;
@@ -16,7 +20,6 @@ namespace Prism.Soundboard
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
-    using Microsoft.AspNetCore.Hosting;
 
     /// <summary>
     /// Interaction logic for App.xaml
@@ -25,6 +28,8 @@ namespace Prism.Soundboard
     {
         private IHost _apiHost;
 
+        private IServiceProvider _serviceProvider;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -32,6 +37,13 @@ namespace Prism.Soundboard
             var builder = WebApplication.CreateBuilder();
 
             builder.WebHost.UseUrls("http://localhost:5000");
+            builder.Services.AddLogging();
+
+            // Register Services
+            builder.Services.AddSingleton<IAudioService, AudioService>();
+
+            // Register Views
+            builder.Services.AddSingleton<MainWindow>();
 
             var app = builder.Build();
 
@@ -48,14 +60,27 @@ namespace Prism.Soundboard
                 return "OK";
             });
 
+            app.MapGet("/test", ([FromServices] IAudioService audioService) =>
+            {
+                return Results.Ok(audioService.Test += "1");
+            });
+
             _apiHost = app;
 
             _apiHost.StartAsync();
+
+            var mainWindow = app.Services.GetRequiredService<MainWindow>();
+            mainWindow.Show();
         }
 
-        protected override void OnExit(ExitEventArgs e)
+        protected override async void OnExit(ExitEventArgs e)
         {
-            _apiHost?.StopAsync().Wait(); base.OnExit(e);
+            if (_apiHost != null)
+            {
+                Task.Run(() => _apiHost.StopAsync()).Wait();
+            }
+
+            base.OnExit(e);
         }
     }
 }

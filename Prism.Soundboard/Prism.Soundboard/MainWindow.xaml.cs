@@ -17,6 +17,7 @@ namespace Prism.Soundboard
     using System.Windows.Media;
 
     using NAudio.Wave;
+    using Prism.Soundboard.Services;
     using UnManaged;
 
     /// <summary>
@@ -24,6 +25,8 @@ namespace Prism.Soundboard
     /// </summary>
     public partial class MainWindow : Window, IDisposable
     {
+        private IAudioService audioService;
+
         private WaveOutEvent outputDevice;
         private WaveOutEvent monitorDevice;
         private WaveInEvent inputMic;
@@ -54,9 +57,13 @@ namespace Prism.Soundboard
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
         /// </summary>
-        public MainWindow()
+        public MainWindow(IAudioService audioService)
         {
             this.InitializeComponent();
+
+            this.audioService = audioService;
+
+            this.audioService.Test = "test";
 
             this.outputDeviceIndexes = new Dictionary<string, int>();
             this.inputDeviceIndexes = new Dictionary<string, int>();
