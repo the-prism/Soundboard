@@ -10,9 +10,9 @@
     <PackageLicenseExpression>GPL V3</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/the-prism/Soundboard</PackageProjectUrl>
     <RepositoryUrl>https://github.com/the-prism/Soundboard</RepositoryUrl>
-    <AssemblyVersion>1.2.1.3</AssemblyVersion>
-    <FileVersion>1.2.1.3</FileVersion>
-    <Version>1.2.1</Version>
+    <AssemblyVersion>1.3.0.1</AssemblyVersion>
+    <FileVersion>1.3.0.1</FileVersion>
+    <Version>1.3.0</Version>
     <NoWarn>$(NoWarn);1573;1591;1712;SA0001</NoWarn>
     <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
   </PropertyGroup>
