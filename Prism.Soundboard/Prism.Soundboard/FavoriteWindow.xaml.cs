@@ -86,6 +86,5 @@ namespace Prism.Soundboard
             (this.Owner as MainWindow)?.Refresh();
             this.Close();
         }
-
     }
 }

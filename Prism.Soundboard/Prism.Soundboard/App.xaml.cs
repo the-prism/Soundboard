@@ -5,13 +5,6 @@
 
 namespace Prism.Soundboard
 {
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
-    using Prism.Soundboard.Services;
     using System;
     using System.Collections.Generic;
     using System.Configuration;
@@ -21,15 +14,22 @@ namespace Prism.Soundboard
     using System.Threading.Tasks;
     using System.Windows;
 
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Prism.Soundboard.Services;
+
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
-        private IHost _apiHost;
+        private IHost apiHost;
 
-        private IServiceProvider _serviceProvider;
-
+        /// <inheritdoc/>
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -49,12 +49,12 @@ namespace Prism.Soundboard
 
             app.MapGet("/ping", () => "pong");
             app.MapGet("/time", () => DateTime.Now);
-            app.MapGet("/play", () =>
+            app.MapGet("/play", ([FromServices] IAudioService audioService) =>
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     // This runs on the UI thread
-                    (Application.Current.MainWindow as MainWindow).PlayAudio(false);
+                    (Application.Current.MainWindow as MainWindow).PlayAudio(audioService.SelectedFilePath);
                 });
 
                 return "OK";
@@ -62,22 +62,23 @@ namespace Prism.Soundboard
 
             app.MapGet("/test", ([FromServices] IAudioService audioService) =>
             {
-                return Results.Ok(audioService.Test += "1");
+                return Results.Ok(audioService.FilesAndPaths);
             });
 
-            _apiHost = app;
+            this.apiHost = app;
 
-            _apiHost.StartAsync();
+            this.apiHost.StartAsync();
 
             var mainWindow = app.Services.GetRequiredService<MainWindow>();
             mainWindow.Show();
         }
 
+        /// <inheritdoc/>
         protected override async void OnExit(ExitEventArgs e)
         {
-            if (_apiHost != null)
+            if (this.apiHost != null)
             {
-                Task.Run(() => _apiHost.StopAsync()).Wait();
+                Task.Run(() => this.apiHost.StopAsync()).Wait();
             }
 
             base.OnExit(e);

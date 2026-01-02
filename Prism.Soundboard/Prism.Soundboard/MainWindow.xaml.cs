@@ -34,87 +34,61 @@ namespace Prism.Soundboard
         private BufferedWaveProvider waveProvider;
         private AudioFileReader audioFile;
         private AudioFileReader monitorAudioFile;
-        private Dictionary<string, int> outputDeviceIndexes;
-        private Dictionary<string, int> inputDeviceIndexes;
-        private Dictionary<string, string> filesAndPath;
-        private int selectedOutputDeviceIndex;
-        private int selectedMonitorDeviceIndex;
-        private int selectedInputDeviceIndex;
-        private string selectedFilePath;
-        private string selectedFavoritePath;
         private double desiredVolume;
         private bool simpleMode;
         private List<Tuple<string, string>> lastFilesPlayed = new List<Tuple<string, string>>(10);
         private Dictionary<int, string> favorites = new Dictionary<int, string>();
-        //private HotKey play = null;
-        //private HotKey stop = null;
-        //private HotKey favorite1 = null;
-        //private HotKey favorite2 = null;
-        //private HotKey favorite3 = null;
-        //private HotKey favorite4 = null;
-        //private HotKey favorite5 = null;
+        private HotKey play = null;
+        private HotKey stop = null;
+        private HotKey favorite1 = null;
+        private HotKey favorite2 = null;
+        private HotKey favorite3 = null;
+        private HotKey favorite4 = null;
+        private HotKey favorite5 = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
         /// </summary>
+        /// <param name="audioService">Dependency injected service</param>
         public MainWindow(IAudioService audioService)
         {
             this.InitializeComponent();
 
             this.audioService = audioService;
 
-            this.audioService.Test = "test";
-
-            this.outputDeviceIndexes = new Dictionary<string, int>();
-            this.inputDeviceIndexes = new Dictionary<string, int>();
-
-            for (int n = 0; n < WaveOut.DeviceCount; n++)
+            foreach (var entry in this.audioService.OutputDevices)
             {
-                var caps = WaveOut.GetCapabilities(n);
-                this.OutputDeviceSelector.Items.Add(caps.ProductName);
-                this.MonitorDeviceSelector.Items.Add(caps.ProductName);
-                this.outputDeviceIndexes.Add(caps.ProductName, n);
+                this.OutputDeviceSelector.Items.Add(entry.Key);
+                this.MonitorDeviceSelector.Items.Add(entry.Key);
             }
 
-            for (int n = 0; n < WaveIn.DeviceCount; n++)
+            foreach (var entry in this.audioService.InputDevices)
             {
-                var caps = WaveIn.GetCapabilities(n);
-                this.InputDeviceSelector.Items.Add(caps.ProductName);
-                this.inputDeviceIndexes.Add(caps.ProductName, n);
-            }
-
-            DirectoryInfo fileDirectory = new DirectoryInfo("Files");
-            this.filesAndPath = new Dictionary<string, string>();
-
-            if (!fileDirectory.Exists)
-            {
-                Directory.CreateDirectory("Files");
-                Process.Start("explorer.exe", fileDirectory.FullName);
+                this.InputDeviceSelector.Items.Add(entry.Key);
             }
 
             this.LoadSettings();
 
-            foreach (FileInfo file in fileDirectory.GetFiles())
+            foreach (var file in this.audioService.FilesAndPaths)
             {
-                this.filesAndPath.Add(file.Name, file.FullName);
-                var content = new Sound(file.Name, this);
-                content.Filename.Text = file.Name;
-                if (this.Favorites.ContainsValue(file.Name))
+                var content = new Sound(file.Key, this);
+                content.Filename.Text = file.Key;
+                if (this.Favorites.ContainsValue(file.Key))
                 {
-                    var favorite = this.Favorites.First(m => m.Value == file.Name);
+                    var favorite = this.Favorites.First(m => m.Value == file.Key);
                     content.Slot.Text = favorite.Key.ToString();
                 }
 
                 this.AudioFiles.Items.Add(content);
             }
 
-            //this.play = new HotKey(Key.F1, KeyModifier.None, this.OnHotKeyHandler);
-            //this.stop = new HotKey(Key.F1, KeyModifier.Ctrl, this.OnHotKeyHandler);
-            //this.favorite1 = new HotKey(Key.F2, KeyModifier.None, this.OnHotKeyHandler);
-            //this.favorite2 = new HotKey(Key.F3, KeyModifier.None, this.OnHotKeyHandler);
-            //this.favorite3 = new HotKey(Key.F4, KeyModifier.None, this.OnHotKeyHandler);
-            //this.favorite4 = new HotKey(Key.F5, KeyModifier.None, this.OnHotKeyHandler);
-            //this.favorite5 = new HotKey(Key.F6, KeyModifier.None, this.OnHotKeyHandler);
+            this.play = new HotKey(Key.F1, KeyModifier.None, this.OnHotKeyHandler);
+            this.stop = new HotKey(Key.F1, KeyModifier.Ctrl, this.OnHotKeyHandler);
+            this.favorite1 = new HotKey(Key.F2, KeyModifier.None, this.OnHotKeyHandler);
+            this.favorite2 = new HotKey(Key.F3, KeyModifier.None, this.OnHotKeyHandler);
+            this.favorite3 = new HotKey(Key.F4, KeyModifier.None, this.OnHotKeyHandler);
+            this.favorite4 = new HotKey(Key.F5, KeyModifier.None, this.OnHotKeyHandler);
+            this.favorite5 = new HotKey(Key.F6, KeyModifier.None, this.OnHotKeyHandler);
         }
 
         /// <summary>List of favorites for hotkeys</summary>
@@ -159,24 +133,24 @@ namespace Prism.Soundboard
         /// <inheritdoc/>
         public void Dispose()
         {
-            //this.play?.Dispose();
-            //this.stop?.Dispose();
+            this.play?.Dispose();
+            this.stop?.Dispose();
             this.outputDevice?.Dispose();
             this.monitorDevice?.Dispose();
             this.audioFile?.Dispose();
             this.inputMic?.Dispose();
-            //this.favorite1?.Dispose();
-            //this.favorite2?.Dispose();
-            //this.favorite3?.Dispose();
-            //this.favorite4?.Dispose();
-            //this.favorite5?.Dispose();
+            this.favorite1?.Dispose();
+            this.favorite2?.Dispose();
+            this.favorite3?.Dispose();
+            this.favorite4?.Dispose();
+            this.favorite5?.Dispose();
         }
 
         /// <summary>Refresh list after favorites change</summary>
         public void Refresh()
         {
             this.AudioFiles.Items.Clear();
-            foreach (var file in this.filesAndPath)
+            foreach (var file in this.audioService.FilesAndPaths)
             {
                 var content = new Sound(file.Key, this);
                 content.Filename.Text = file.Key;
@@ -190,9 +164,42 @@ namespace Prism.Soundboard
             }
         }
 
+        /// <summary>Play the audio file at the selected file path</summary>
+        /// <param name="filePath"></param>
+        public void PlayAudio(string filePath)
+        {
+            if (this.outputDevice == null)
+            {
+                this.outputDevice = new WaveOutEvent() { DeviceNumber = this.audioService.SelectedOutputDeviceIndex };
+                this.outputDevice.PlaybackStopped += this.OnPlaybackStopped;
+            }
+
+            if (this.monitorDevice == null && this.audioService.SelectedOutputDeviceIndex != this.audioService.SelectedMonitorDeviceIndex)
+            {
+                this.monitorDevice = new WaveOutEvent() { DeviceNumber = this.audioService.SelectedMonitorDeviceIndex };
+                this.monitorDevice.PlaybackStopped += this.OnPlaybackStopped;
+            }
+
+            if (this.audioFile == null)
+            {
+                float convertedVolume = (float)this.desiredVolume / 10f;
+
+                this.audioFile = new AudioFileReader(filePath);
+                this.audioFile.Volume = convertedVolume;
+                this.monitorAudioFile = new AudioFileReader(filePath);
+                this.monitorAudioFile.Volume = convertedVolume;
+
+                this.outputDevice.Init(this.audioFile);
+                this.monitorDevice?.Init(this.monitorAudioFile);
+            }
+
+            this.outputDevice.Play();
+            this.monitorDevice?.Play();
+        }
+
         private void Play_Click(object sender, RoutedEventArgs e)
         {
-            this.PlayAudio(false);
+            this.PlayAudio(this.audioService.SelectedFilePath);
         }
 
         private void Stop_Click(object sender, RoutedEventArgs e)
@@ -231,11 +238,11 @@ namespace Prism.Soundboard
         {
             try
             {
-                this.selectedOutputDeviceIndex = this.outputDeviceIndexes?[this.OutputDeviceSelector.SelectedItem.ToString()] ?? -1;
+                this.audioService?.SelectedOutputDeviceIndex = this.audioService?.OutputDevices?[this.OutputDeviceSelector.SelectedItem.ToString()] ?? -1;
             }
             catch (Exception)
             {
-                this.selectedOutputDeviceIndex = -1;
+                this.audioService?.SelectedOutputDeviceIndex = -1;
             }
         }
 
@@ -243,8 +250,8 @@ namespace Prism.Soundboard
         {
             if (this.AudioFiles.SelectedItem is not null)
             {
-                this.selectedFilePath = this.filesAndPath?[this.AudioFiles.SelectedItem.ToString()];
-                this.LastSelected(this.selectedFilePath, this.AudioFiles.SelectedItem.ToString());
+                this.audioService.SelectedFilePath = this.audioService.FilesAndPaths?[this.AudioFiles.SelectedItem.ToString()];
+                this.LastSelected(this.audioService.SelectedFilePath, this.AudioFiles.SelectedItem.ToString());
             }
         }
 
@@ -271,11 +278,11 @@ namespace Prism.Soundboard
         {
             try
             {
-                this.selectedMonitorDeviceIndex = this.outputDeviceIndexes?[this.MonitorDeviceSelector.SelectedItem.ToString()] ?? -1;
+                this.audioService?.SelectedMonitorDeviceIndex = this.audioService?.OutputDevices?[this.MonitorDeviceSelector.SelectedItem.ToString()] ?? -1;
             }
             catch (Exception)
             {
-                this.selectedMonitorDeviceIndex = -1;
+                this.audioService?.SelectedMonitorDeviceIndex = -1;
             }
         }
 
@@ -283,11 +290,11 @@ namespace Prism.Soundboard
         {
             try
             {
-                this.selectedInputDeviceIndex = this.inputDeviceIndexes?[this.InputDeviceSelector.SelectedItem.ToString()] ?? -1;
+                this.audioService?.SelectedInputDeviceIndex = this.audioService?.InputDevices?[this.InputDeviceSelector.SelectedItem.ToString()] ?? -1;
             }
             catch (Exception)
             {
-                this.selectedInputDeviceIndex = -1;
+                this.audioService?.SelectedInputDeviceIndex = -1;
             }
         }
 
@@ -298,7 +305,7 @@ namespace Prism.Soundboard
 
         private void AudioFiles_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            this.selectedFilePath = this.filesAndPath?[this.AudioFiles.SelectedItem.ToString()];
+            this.audioService.SelectedFilePath = this.audioService.FilesAndPaths?[this.AudioFiles.SelectedItem.ToString()];
 
             this.Play_Click(sender, e);
         }
@@ -307,9 +314,9 @@ namespace Prism.Soundboard
         {
             SavedSettings settingsToSave = new SavedSettings()
             {
-                OutputDeviceIndex = this.selectedOutputDeviceIndex,
-                MonitorDeviceIndex = this.selectedMonitorDeviceIndex,
-                InputMicIndex = this.selectedInputDeviceIndex,
+                OutputDeviceIndex = this.audioService.SelectedOutputDeviceIndex,
+                MonitorDeviceIndex = this.audioService.SelectedMonitorDeviceIndex,
+                InputMicIndex = this.audioService.SelectedInputDeviceIndex,
                 Volume = this.desiredVolume,
                 SimpleMode = this.simpleMode,
                 SimpleOptions = this.lastFilesPlayed,
@@ -335,24 +342,24 @@ namespace Prism.Soundboard
 
                 if (restoredSettings.OutputDeviceIndex != -1)
                 {
-                    this.OutputDeviceSelector.SelectedItem = this.outputDeviceIndexes.Where(v => v.Value == restoredSettings.OutputDeviceIndex).FirstOrDefault().Key;
+                    this.OutputDeviceSelector.SelectedItem = this.audioService.OutputDevices.Where(v => v.Value == restoredSettings.OutputDeviceIndex).FirstOrDefault().Key;
                 }
 
                 if (restoredSettings.MonitorDeviceIndex != -1)
                 {
-                    this.MonitorDeviceSelector.SelectedItem = this.outputDeviceIndexes.Where(v => v.Value == restoredSettings.MonitorDeviceIndex).FirstOrDefault().Key;
+                    this.MonitorDeviceSelector.SelectedItem = this.audioService.OutputDevices.Where(v => v.Value == restoredSettings.MonitorDeviceIndex).FirstOrDefault().Key;
                 }
 
                 if (restoredSettings.InputMicIndex != -1)
                 {
-                    this.InputDeviceSelector.SelectedItem = this.inputDeviceIndexes.Where(v => v.Value == restoredSettings.InputMicIndex).FirstOrDefault().Key;
+                    this.InputDeviceSelector.SelectedItem = this.audioService.InputDevices.Where(v => v.Value == restoredSettings.InputMicIndex).FirstOrDefault().Key;
                 }
 
                 this.VolumeControl.Value = restoredSettings.Volume;
 
-                this.selectedOutputDeviceIndex = restoredSettings.OutputDeviceIndex;
-                this.selectedMonitorDeviceIndex = restoredSettings.MonitorDeviceIndex;
-                this.selectedInputDeviceIndex = restoredSettings.InputMicIndex;
+                this.audioService.SelectedOutputDeviceIndex = restoredSettings.OutputDeviceIndex;
+                this.audioService.SelectedMonitorDeviceIndex = restoredSettings.MonitorDeviceIndex;
+                this.audioService.SelectedInputDeviceIndex = restoredSettings.InputMicIndex;
                 this.desiredVolume = restoredSettings.Volume;
                 this.lastFilesPlayed = restoredSettings.SimpleOptions ?? new List<Tuple<string, string>>(10);
                 this.favorites = restoredSettings.Favorites ?? new Dictionary<int, string>();
@@ -369,10 +376,10 @@ namespace Prism.Soundboard
             {
                 this.Passthrough_Text.Text = "Stop";
 
-                this.inputDevice = new WaveOutEvent() { DeviceNumber = this.selectedOutputDeviceIndex };
+                this.inputDevice = new WaveOutEvent() { DeviceNumber = this.audioService.SelectedOutputDeviceIndex };
                 this.inputDevice.PlaybackStopped += this.OnRecordStopped;
 
-                this.inputMic = new WaveInEvent() { DeviceNumber = this.selectedInputDeviceIndex, WaveFormat = new WaveFormat(48000, 16, 2) };
+                this.inputMic = new WaveInEvent() { DeviceNumber = this.audioService.SelectedInputDeviceIndex, WaveFormat = new WaveFormat(48000, 16, 2) };
                 this.inputMic.RecordingStopped += this.OnRecordStopped;
 
                 this.waveProvider = new BufferedWaveProvider(this.inputMic.WaveFormat);
@@ -407,71 +414,40 @@ namespace Prism.Soundboard
 
         private void OnHotKeyHandler(HotKey hotKey)
         {
-            //if (hotKey == this.play)
-            //{
-            //    this.PlayAudio(false);
-            //}
-            //else if (hotKey == this.stop)
-            //{
-            //    this.Stop_Click(null, null);
-            //}
-            //else if (hotKey == this.favorite1)
-            //{
-            //    this.PlayFavorite(1);
-            //}
-            //else if (hotKey == this.favorite2)
-            //{
-            //    this.PlayFavorite(2);
-            //}
-            //else if (hotKey == this.favorite3)
-            //{
-            //    this.PlayFavorite(3);
-            //}
-            //else if (hotKey == this.favorite4)
-            //{
-            //    this.PlayFavorite(4);
-            //}
-            //else if (hotKey == this.favorite5)
-            //{
-            //    this.PlayFavorite(5);
-            //}
+            if (hotKey == this.play)
+            {
+                this.PlayAudio(this.audioService.SelectedFilePath);
+            }
+            else if (hotKey == this.stop)
+            {
+                this.Stop_Click(null, null);
+            }
+            else if (hotKey == this.favorite1)
+            {
+                this.PlayFavorite(1);
+            }
+            else if (hotKey == this.favorite2)
+            {
+                this.PlayFavorite(2);
+            }
+            else if (hotKey == this.favorite3)
+            {
+                this.PlayFavorite(3);
+            }
+            else if (hotKey == this.favorite4)
+            {
+                this.PlayFavorite(4);
+            }
+            else if (hotKey == this.favorite5)
+            {
+                this.PlayFavorite(5);
+            }
         }
 
         private void PlayFavorite(int id)
         {
-            this.selectedFavoritePath = this.filesAndPath?[this.Favorites[id]];
-            this.PlayAudio(true);
-        }
-
-        public async void PlayAudio(bool favorite)
-        {
-            if (this.outputDevice == null)
-            {
-                this.outputDevice = new WaveOutEvent() { DeviceNumber = this.selectedOutputDeviceIndex };
-                this.outputDevice.PlaybackStopped += this.OnPlaybackStopped;
-            }
-
-            if (this.monitorDevice == null && this.selectedOutputDeviceIndex != this.selectedMonitorDeviceIndex)
-            {
-                this.monitorDevice = new WaveOutEvent() { DeviceNumber = this.selectedMonitorDeviceIndex };
-                this.monitorDevice.PlaybackStopped += this.OnPlaybackStopped;
-            }
-
-            if (this.audioFile == null)
-            {
-                float convertedVolume = (float)this.desiredVolume / 10f;
-
-                this.audioFile = new AudioFileReader(favorite ? this.selectedFavoritePath : this.selectedFilePath);
-                this.audioFile.Volume = convertedVolume;
-                this.monitorAudioFile = new AudioFileReader(favorite ? this.selectedFavoritePath : this.selectedFilePath);
-                this.monitorAudioFile.Volume = convertedVolume;
-
-                this.outputDevice.Init(this.audioFile);
-                this.monitorDevice?.Init(this.monitorAudioFile);
-            }
-
-            this.outputDevice.Play();
-            this.monitorDevice?.Play();
+            this.audioService.SelectedFavoritePath = this.audioService.FilesAndPaths?[this.Favorites[id]];
+            this.PlayAudio(this.audioService.SelectedFavoritePath);
         }
     }
 }

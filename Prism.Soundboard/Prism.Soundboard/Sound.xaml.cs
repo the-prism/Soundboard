@@ -28,14 +28,15 @@ namespace Prism.Soundboard
     {
         private MainWindow handle;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Sound"/> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="Sound"/> class.</summary>
         public Sound()
         {
             this.InitializeComponent();
         }
 
+        /// <summary>Initializes a new instance of the <see cref="Sound"/> class.</summary>
+        /// <param name="filename"></param>
+        /// <param name="handle"></param>
         public Sound(string filename, MainWindow handle)
         {
             this.InitializeComponent();
@@ -43,6 +44,7 @@ namespace Prism.Soundboard
             this.Filename.Text = filename;
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return this.Filename.Text;
@@ -55,7 +57,7 @@ namespace Prism.Soundboard
             window.Owner = this.handle;
             window.File.Text = this.Filename.Text;
             window.Show();
-            //this.handle.Favorites.Add(1, this.Filename.Text);
+            this.handle.Favorites.Add(1, this.Filename.Text);
         }
     }
 }
