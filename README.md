@@ -1,7 +1,7 @@
 # Soundboard
 WPF Based audio soudboard for a virtual audio cable
 
-The app runs on .NET 5, runtime is required to use it, SDK required to build it.
+The app runs on .NET 10, complete runtime is required to use it, SDK required to build it.
 
 ## Usage
 The app will list all playback devices on your computer.
