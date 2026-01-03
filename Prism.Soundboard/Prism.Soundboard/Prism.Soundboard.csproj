@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="$(OutDir)blazor\**\*.*">
+    <Content Include="$(ProjectDir)blazor\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -46,9 +46,14 @@
     <PackageReference Include="WPF-UI" Version="4.1.0" />
   </ItemGroup>
 
-  <Target Name="PublishBlazor" AfterTargets="Build">
+  <!--<Target Name="PublishBlazor" AfterTargets="Build">
     <Exec Command="dotnet publish ..\Prism.Soundboard.Web\Prism.Soundboard.Web.csproj -c $(Configuration) -o $(OutDir)blazor" />
+  </Target>-->
+
+  <Target Name="PublishBlazor" AfterTargets="Build">
+    <Exec Command="dotnet publish ..\Prism.Soundboard.Web\Prism.Soundboard.Web.csproj -c $(Configuration) -o $(ProjectDir)blazor" />
   </Target>
+
 
   <Target Name="CleanCustomOutput" AfterTargets="Clean">
     <RemoveDir Directories="$(OutDir)blazor" />

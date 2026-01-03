@@ -348,5 +348,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-Prism.Soundboard/Prism.Soundboard/Prism.Soundboard.xml
+Prism.Soundboard/Prism.Soundboard/blazor
 *.mp4
