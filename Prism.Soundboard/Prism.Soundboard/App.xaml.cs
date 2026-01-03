@@ -34,42 +34,11 @@ namespace Prism.Soundboard
         {
             base.OnStartup(e);
 
-            var builder = WebApplication.CreateBuilder();
-
-            builder.WebHost.UseUrls("http://localhost:5000");
-            builder.Services.AddLogging();
-
-            // Register Services
-            builder.Services.AddSingleton<IAudioService, AudioService>();
-
-            // Register Views
-            builder.Services.AddSingleton<MainWindow>();
-
-            var app = builder.Build();
-
-            app.MapGet("/ping", () => "pong");
-            app.MapGet("/time", () => DateTime.Now);
-            app.MapGet("/play", ([FromServices] IAudioService audioService) =>
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    // This runs on the UI thread
-                    (Application.Current.MainWindow as MainWindow).PlayAudio(audioService.SelectedFilePath);
-                });
-
-                return "OK";
-            });
-
-            app.MapGet("/test", ([FromServices] IAudioService audioService) =>
-            {
-                return Results.Ok(audioService.FilesAndPaths);
-            });
-
-            this.apiHost = app;
+            this.apiHost = APIHost.BuildAPI();
 
             this.apiHost.StartAsync();
 
-            var mainWindow = app.Services.GetRequiredService<MainWindow>();
+            var mainWindow = this.apiHost.Services.GetRequiredService<MainWindow>();
             mainWindow.Show();
         }
 
