@@ -18,8 +18,11 @@ namespace Prism.Soundboard
     using Microsoft.Extensions.Hosting;
     using Prism.Soundboard.Services;
 
+    /// <summary>Host of the API services</summary>
     public static class APIHost
     {
+        /// <summary>Create the API host</summary>
+        /// <returns>Configured host ready to be started</returns>
         public static IHost BuildAPI()
         {
             var builder = WebApplication.CreateBuilder();
@@ -43,7 +46,7 @@ namespace Prism.Soundboard
         private static void BuildRoutes(ref WebApplication app)
         {
             app.MapGet("/ping", () => "pong");
-            app.MapGet("/time", () => DateTime.Now);
+            app.MapGet("/isalive", () => DateTime.Now);
             app.MapGet("/play", ([FromServices] IAudioService audioService) =>
             {
                 Application.Current.Dispatcher.Invoke(() =>

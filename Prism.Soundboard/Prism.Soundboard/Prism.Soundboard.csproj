@@ -30,6 +30,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="$(OutDir)blazor\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="MahApps.Metro.IconPacks.BootstrapIcons" Version="4.11.0" />
     <PackageReference Include="NAudio" Version="2.2.1" />
@@ -40,4 +46,11 @@
     <PackageReference Include="WPF-UI" Version="4.1.0" />
   </ItemGroup>
 
+  <Target Name="PublishBlazor" AfterTargets="Build">
+    <Exec Command="dotnet publish ..\Prism.Soundboard.Web\Prism.Soundboard.Web.csproj -c $(Configuration) -o $(OutDir)blazor" />
+  </Target>
+
+  <Target Name="CleanCustomOutput" AfterTargets="Clean">
+    <RemoveDir Directories="$(OutDir)blazor" />
+  </Target>
 </Project>

@@ -6,21 +6,12 @@
 namespace Prism.Soundboard
 {
     using System;
-    using System.Collections.Generic;
-    using System.Configuration;
-    using System.Data;
-    using System.Linq;
-    using System.Threading;
+    using System.Diagnostics;
     using System.Threading.Tasks;
     using System.Windows;
 
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using Prism.Soundboard.Services;
 
     /// <summary>
     /// Interaction logic for App.xaml
@@ -28,6 +19,7 @@ namespace Prism.Soundboard
     public partial class App : Application
     {
         private IHost apiHost;
+        private Process blazorHost;
 
         /// <inheritdoc/>
         protected override void OnStartup(StartupEventArgs e)
@@ -40,6 +32,8 @@ namespace Prism.Soundboard
 
             var mainWindow = this.apiHost.Services.GetRequiredService<MainWindow>();
             mainWindow.Show();
+
+            this.blazorHost = BlazorServer.StartBlazor();
         }
 
         /// <inheritdoc/>
@@ -48,6 +42,17 @@ namespace Prism.Soundboard
             if (this.apiHost != null)
             {
                 Task.Run(() => this.apiHost.StopAsync()).Wait();
+            }
+
+            try
+            {
+                if (this.blazorHost is not null && !this.blazorHost.HasExited)
+                {
+                    this.blazorHost.Kill(true); // true = kill entire process tree
+                }
+            }
+            catch
+            {
             }
 
             base.OnExit(e);
