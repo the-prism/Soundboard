@@ -3,16 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:local="clr-namespace:Prism.Soundboard"
         mc:Ignorable="d"
-        Title="Soundboard" Height="650" Width="800" Closed="Window_Closed">
+        Title="Soundboard" Height="650" Width="900" Closed="Window_Closed">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
-            <RowDefinition Height="64"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="20"/>
@@ -23,31 +23,31 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Background="{StaticResource AccentColorBrush}">
-            <TextBlock Text="Prism Soundboard" Style="{StaticResource Header20}" Foreground="White" Margin="10 8 0 8"/>
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}">
+            <TextBlock Text="Prism Soundboard" Foreground="White" Margin="10 8 0 8" FontSize="20" />
         </Grid>
 
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
-                <Label Content="Output device :"/>
-                <ComboBox x:Name="OutputDeviceSelector" SelectionChanged="OutputDeviceSelector_SelectionChanged" Height="24">
-                    <ComboBoxItem IsSelected="True">Default playback device</ComboBoxItem>
+                <Label Content="Output device :" VerticalContentAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox x:Name="OutputDeviceSelector" SelectionChanged="OutputDeviceSelector_SelectionChanged" Margin="0,0,5,0">
+                    <ComboBoxItem IsSelected="True" Content="Default playback device"/>
                 </ComboBox>
-                <Label Content="Monitor device :"/>
-                <ComboBox x:Name="MonitorDeviceSelector" SelectionChanged="MonitorDeviceSelector_SelectionChanged" Height="24">
-                    <ComboBoxItem IsSelected="True">Default playback device</ComboBoxItem>
+                <Label Content="Monitor device :" VerticalContentAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox x:Name="MonitorDeviceSelector" SelectionChanged="MonitorDeviceSelector_SelectionChanged">
+                    <ComboBoxItem IsSelected="True" Content="Default playback device"/>
                 </ComboBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Label Content="Input device :"/>
-                <ComboBox x:Name="InputDeviceSelector" SelectionChanged="InputDeviceSelector_SelectionChanged" Height="24">
-                    <ComboBoxItem IsSelected="True">Default input device</ComboBoxItem>
+                <Label Content="Input device :" VerticalContentAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox x:Name="InputDeviceSelector" SelectionChanged="InputDeviceSelector_SelectionChanged">
+                    <ComboBoxItem IsSelected="True" Content="Default input device" />
                 </ComboBox>
             </StackPanel>
         </StackPanel>
 
         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0,5,0,0">
-            <Button x:Name="Play" Click="Play_Click" Margin="0,0,5,0" Padding="5" Height="28" Style="{StaticResource AccentButton}">
+            <Button x:Name="Play" Click="Play_Click" Margin="0,0,5,0" Padding="5" Height="28">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconBootstrapIcons Kind="Play" Margin="0,0,5,0"/>
                     <TextBlock Text="PLAY"/>

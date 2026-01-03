@@ -120,17 +120,6 @@ namespace Prism.Soundboard
         }
 
         /// <inheritdoc/>
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            var accentBrush = this.TryFindResource("AccentColorBrush") as SolidColorBrush;
-            if (accentBrush != null)
-            {
-                accentBrush.Color.CreateAccentColors();
-            }
-        }
-
-        /// <inheritdoc/>
         public void Dispose()
         {
             this.play?.Dispose();

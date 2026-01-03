@@ -10,9 +10,9 @@
     <PackageLicenseExpression>GPL V3</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/the-prism/Soundboard</PackageProjectUrl>
     <RepositoryUrl>https://github.com/the-prism/Soundboard</RepositoryUrl>
-    <AssemblyVersion>1.3.0.1</AssemblyVersion>
-    <FileVersion>1.3.0.1</FileVersion>
-    <Version>1.3.0</Version>
+    <AssemblyVersion>1.4.0.1</AssemblyVersion>
+    <FileVersion>1.4.0.1</FileVersion>
+    <Version>1.4.0</Version>
     <NoWarn>$(NoWarn);1573;1591;1712;SA0001</NoWarn>
     <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
   </PropertyGroup>
@@ -37,6 +37,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="WPF-UI" Version="4.1.0" />
   </ItemGroup>
 
 </Project>
