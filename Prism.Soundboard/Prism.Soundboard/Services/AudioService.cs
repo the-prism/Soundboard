@@ -48,7 +48,7 @@ namespace Prism.Soundboard.Services
 
             foreach (FileInfo file in fileDirectory.GetFiles())
             {
-                this.FilesAndPaths.Add(file.Name, file.FullName);
+                this.FilesAndPaths.Add(Path.GetFileNameWithoutExtension(file.Name), file.FullName);
             }
         }
 

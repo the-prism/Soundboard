@@ -10,9 +10,9 @@
     <PackageLicenseExpression>GPL V3</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/the-prism/Soundboard</PackageProjectUrl>
     <RepositoryUrl>https://github.com/the-prism/Soundboard</RepositoryUrl>
-    <AssemblyVersion>1.4.1.2</AssemblyVersion>
-    <FileVersion>1.4.1.2</FileVersion>
-    <Version>1.4.1</Version>
+    <AssemblyVersion>1.4.2.1</AssemblyVersion>
+    <FileVersion>1.4.2.1</FileVersion>
+    <Version>1.4.2</Version>
     <NoWarn>$(NoWarn);1573;1591;1712;SA0001</NoWarn>
     <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
   </PropertyGroup>
@@ -37,7 +37,6 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="MahApps.Metro.IconPacks.BootstrapIcons" Version="4.11.0" />
     <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>

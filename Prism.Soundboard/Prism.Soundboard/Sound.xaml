@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Prism.Soundboard"
-             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -16,10 +16,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Column="0" x:Name="Filename" Text="Benutzername:" />
+        <TextBlock Grid.Column="0" x:Name="Filename" Text="Filename:" />
         <Button Grid.Column="1" x:Name="Save" Click="Save_Click" Padding="0" Width="18" Height="16">
             <StackPanel Orientation="Horizontal">
-                <iconPacks:PackIconBootstrapIcons Kind="Star" Width="12" Height="12"/>
+                <ui:FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE734;"/>
             </StackPanel>
         </Button>
         <TextBlock Grid.Column="2" x:Name="Slot" Text="" />

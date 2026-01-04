@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:local="clr-namespace:Prism.Soundboard"
         mc:Ignorable="d"
         Title="Soundboard" Height="650" Width="900" Closed="Window_Closed">
@@ -47,23 +46,24 @@
         </StackPanel>
 
         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0,5,0,0">
-            <Button x:Name="Play" Click="Play_Click" Margin="0,0,5,0" Padding="5" Height="28">
+            <Button x:Name="Play" Click="Play_Click" Margin="0,0,5,0" Padding="5">
                 <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconBootstrapIcons Kind="Play" Margin="0,0,5,0"/>
-                    <TextBlock Text="PLAY"/>
+                    <ui:FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE768;" Margin="0,0,5,0"/>
+                    <TextBlock Text="Play"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="Stop" Click="Stop_Click" Margin="5,0,5,0" Padding="5" Height="28">
+            <Button x:Name="Stop" Click="Stop_Click" Margin="5,0,5,0" Padding="5">
                 <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconBootstrapIcons Kind="Stop" Margin="0,0,5,0"/>
-                    <TextBlock Text="STOP"/>
+                    <ui:FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE71A;" Margin="0,0,5,0"/>
+                    <TextBlock Text="Stop"/>
                 </StackPanel>
             </Button>
-            <Slider x:Name="VolumeControl" ValueChanged="VolumeControl_ValueChanged" MinWidth="150" Margin="5,0,0,0" Value="20"/>
+            
+            <Slider x:Name="VolumeControl" ValueChanged="VolumeControl_ValueChanged" MinWidth="150" Margin="5,0,0,0" Value="20" Height="20"/>
 
-            <Button x:Name="Passthrough" Click="Passthrough_Click" Margin="5,0,5,0" Padding="5" Height="28">
+            <Button x:Name="Passthrough" Click="Passthrough_Click" Margin="5,0,5,0" Padding="5">
                 <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconBootstrapIcons Kind="Record" Margin="0,0,5,0"/>
+                    <ui:FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE7C8;" Margin="0,0,5,0"/>
                     <TextBlock x:Name="Passthrough_Text" Text="Record"/>
                 </StackPanel>
             </Button>
