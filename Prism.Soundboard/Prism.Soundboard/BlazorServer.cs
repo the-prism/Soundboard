@@ -31,7 +31,7 @@ namespace Prism.Soundboard
             };
 
             psi.Environment["ASPNETCORE_ENVIRONMENT"] = "Development";
-            psi.Environment["ASPNETCORE_URLS"] = "http://localhost:5010";
+            psi.Environment["ASPNETCORE_URLS"] = "http://0.0.0.0:5010";
 
             var process = new Process { StartInfo = psi, EnableRaisingEvents = true };
 
