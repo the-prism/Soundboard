@@ -49,10 +49,10 @@ namespace Prism.Soundboard
             app.MapGet("/isalive", () => DateTime.Now);
             app.MapGet("/play", ([FromServices] IAudioService audioService) =>
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                Application.Current.Dispatcher.Invoke(async () =>
                 {
                     // This runs on the UI thread
-                    (Application.Current.MainWindow as MainWindow).PlayAudio(audioService.SelectedFilePath);
+                    await (Application.Current.MainWindow as MainWindow).PlayAudio(audioService.SelectedFilePath);
                 });
 
                 return "OK";
@@ -60,10 +60,10 @@ namespace Prism.Soundboard
 
             app.MapPost("/play", ([FromServices] IAudioService audioService, [FromBody] string filename) =>
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                Application.Current.Dispatcher.Invoke(async () =>
                 {
                     // This runs on the UI thread
-                    (Application.Current.MainWindow as MainWindow).PlayAudio(audioService.FilesAndPaths[filename]);
+                    await (Application.Current.MainWindow as MainWindow).PlayAudio(audioService.FilesAndPaths[filename]);
                 });
             });
 

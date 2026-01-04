@@ -11,6 +11,8 @@ namespace Prism.Soundboard
     using System.IO;
     using System.Linq;
     using System.Text.Json;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -155,8 +157,21 @@ namespace Prism.Soundboard
 
         /// <summary>Play the audio file at the selected file path</summary>
         /// <param name="filePath"></param>
-        public void PlayAudio(string filePath)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task PlayAudio(string filePath)
         {
+            if (this.audioFile is not null)
+            {
+                var waitMainTask = this.WaitForMainPlaybackStopped();
+                var waitMonitorTask = this.WaitForMonitorPlaybackStopped();
+
+                this.outputDevice?.Stop();
+                this.monitorDevice?.Stop();
+
+                await waitMainTask;
+                await waitMonitorTask;
+            }
+
             if (this.outputDevice == null)
             {
                 this.outputDevice = new WaveOutEvent() { DeviceNumber = this.audioService.SelectedOutputDeviceIndex };
@@ -186,9 +201,9 @@ namespace Prism.Soundboard
             this.monitorDevice?.Play();
         }
 
-        private void Play_Click(object sender, RoutedEventArgs e)
+        private async void Play_Click(object sender, RoutedEventArgs e)
         {
-            this.PlayAudio(this.audioService.SelectedFilePath);
+            await this.PlayAudio(this.audioService.SelectedFilePath);
         }
 
         private void Stop_Click(object sender, RoutedEventArgs e)
@@ -210,6 +225,38 @@ namespace Prism.Soundboard
 
             this.monitorAudioFile?.Dispose();
             this.monitorAudioFile = null;
+        }
+
+        private Task WaitForMainPlaybackStopped()
+        {
+            var taskCompletion = new TaskCompletionSource<object>();
+
+            EventHandler<StoppedEventArgs> handler = null;
+            handler = (s, e) =>
+            {
+                this.outputDevice?.PlaybackStopped -= handler;
+                taskCompletion.SetResult(null);
+            };
+
+            this.outputDevice?.PlaybackStopped += handler;
+
+            return taskCompletion.Task;
+        }
+
+        private Task WaitForMonitorPlaybackStopped()
+        {
+            var taskCompletion = new TaskCompletionSource<object>();
+
+            EventHandler<StoppedEventArgs> handler = null;
+            handler = (s, e) =>
+            {
+                this.monitorDevice?.PlaybackStopped -= handler;
+                taskCompletion.SetResult(null);
+            };
+
+            this.monitorDevice?.PlaybackStopped += handler;
+
+            return taskCompletion.Task;
         }
 
         private void OnRecordStopped(object sender, StoppedEventArgs args)
@@ -401,11 +448,11 @@ namespace Prism.Soundboard
             }
         }
 
-        private void OnHotKeyHandler(HotKey hotKey)
+        private async void OnHotKeyHandler(HotKey hotKey)
         {
             if (hotKey == this.play)
             {
-                this.PlayAudio(this.audioService.SelectedFilePath);
+                await this.PlayAudio(this.audioService.SelectedFilePath);
             }
             else if (hotKey == this.stop)
             {
@@ -413,30 +460,30 @@ namespace Prism.Soundboard
             }
             else if (hotKey == this.favorite1)
             {
-                this.PlayFavorite(1);
+                await this.PlayFavorite(1);
             }
             else if (hotKey == this.favorite2)
             {
-                this.PlayFavorite(2);
+                await this.PlayFavorite(2);
             }
             else if (hotKey == this.favorite3)
             {
-                this.PlayFavorite(3);
+                await this.PlayFavorite(3);
             }
             else if (hotKey == this.favorite4)
             {
-                this.PlayFavorite(4);
+                await this.PlayFavorite(4);
             }
             else if (hotKey == this.favorite5)
             {
-                this.PlayFavorite(5);
+                await this.PlayFavorite(5);
             }
         }
 
-        private void PlayFavorite(int id)
+        private async Task PlayFavorite(int id)
         {
             this.audioService.SelectedFavoritePath = this.audioService.FilesAndPaths?[this.Favorites[id]];
-            this.PlayAudio(this.audioService.SelectedFavoritePath);
+            await this.PlayAudio(this.audioService.SelectedFavoritePath);
         }
     }
 }
