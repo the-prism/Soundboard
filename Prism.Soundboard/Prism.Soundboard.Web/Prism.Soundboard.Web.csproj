@@ -10,13 +10,18 @@
     <PackageLicenseExpression>GPL V3</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/the-prism/Soundboard</PackageProjectUrl>
     <RepositoryUrl>https://github.com/the-prism/Soundboard</RepositoryUrl>
-    <AssemblyVersion>1.0.0.*</AssemblyVersion>
-    <FileVersion>1.0.0.*</FileVersion>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
     <Version>1.0.0</Version>
+    <NoWarn>$(NoWarn);1573;1591;1712;SA0001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
   <ItemGroup>
