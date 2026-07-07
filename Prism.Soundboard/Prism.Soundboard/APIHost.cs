@@ -18,25 +18,48 @@ namespace Prism.Soundboard
     using Microsoft.Extensions.Hosting;
     using Prism.Soundboard.Services;
 
-    /// <summary>Host of the API services</summary>
+    /// <summary>Host of the API and the embedded Blazor web UI</summary>
     public static class APIHost
     {
         /// <summary>Create the API host</summary>
         /// <returns>Configured host ready to be started</returns>
         public static IHost BuildAPI()
         {
-            var builder = WebApplication.CreateBuilder();
+            var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+            {
+                // Keep the content root at the exe folder regardless of the launching
+                // process's working directory.
+                ContentRootPath = AppContext.BaseDirectory,
+            });
 
-            builder.WebHost.UseUrls("http://localhost:5000");
+            builder.WebHost.UseUrls("http://0.0.0.0:5010");
+
+            // MapStaticAssets needs the static web assets file provider to resolve asset bytes.
+            // CreateBuilder only wires it up automatically in the Development environment, so call
+            // it explicitly: it loads the build manifest when running from bin (dev), and is a
+            // no-op once published, where the assets are copied into wwwroot and served directly.
+            builder.WebHost.UseStaticWebAssets();
             builder.Services.AddLogging();
 
             // Register Services
             builder.Services.AddSingleton<IAudioService, AudioService>();
 
+            // Bridge the web UI to the in-process WPF audio playback
+            builder.Services.AddSingleton<Web.Services.IAudioService, WebAudioService>();
+
+            // Register the Blazor web UI
+            builder.Services.AddRazorComponents()
+                .AddInteractiveServerComponents();
+
             // Register Views
             builder.Services.AddSingleton<MainWindow>();
 
             var app = builder.Build();
+
+            app.UseAntiforgery();
+            app.MapStaticAssets();
+            app.MapRazorComponents<Web.Components.App>()
+                .AddInteractiveServerRenderMode();
 
             BuildRoutes(ref app);
 
